@@ -1,19 +1,25 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(require("react"));
-//import logo from './logo.svg';
-//<img src={logo} className="App-logo" alt="logo" />
-require("./App.css");
-const App = () => {
-    return (react_1.default.createElement("div", { className: "App" },
-        react_1.default.createElement("header", { className: "App-header" },
-            react_1.default.createElement("p", null,
-                "Edit ",
-                react_1.default.createElement("code", null, "src/App.tsx"),
-                " and save to reload."),
-            react_1.default.createElement("a", { className: "App-link", href: "https://reactjs.org", target: "_blank", rel: "noopener noreferrer" }, "Learn React test"))));
-};
-exports.default = App;
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React test
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
