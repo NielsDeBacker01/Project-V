@@ -8,7 +8,7 @@ const EventService = {
     },
   }),
 
-  async getEventsById(serieId) {
+  async getEventsBySerieId(serieId) {
     try {
       const response = await this.api.get('/id', {
         params: {

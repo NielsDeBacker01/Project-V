@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class EventService {
-  getEventsById(series_id: string): any {
+  getEventsBySerieId(series_id: string): any {
     try {
         const eventData = fs.readFileSync(`../data/events_${series_id}_grid.jsonl`, 'utf8');
         const lines = eventData.split('\n').filter(line => line.trim() !== '');

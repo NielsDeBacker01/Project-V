@@ -6,8 +6,8 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get('id')
-  getEventsById(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getEventsById(series_id);
+  getEventsBySerieId(@Query('series_id') series_id: string): any[] {
+    return this.eventService.getEventsBySerieId(series_id);
   }
 
   /* part of issue 34
