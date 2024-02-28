@@ -1,25 +1,31 @@
 .App {
   text-align: center;
+  display: flex;
+  height: 100vh;
 }
 
-.App-header {
+.App-body {
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  width: 100%;
+  overflow-y: scroll;
 }
 
 pre {
-  max-width: 75vw;
   overflow: hidden;
+  overflow-y: scroll;
   white-space: pre-wrap;
   font-size: small;
+  height: 25vh;
+  border: black 0.1rem solid;
+}
+
+.sidebar {
+  width: 12rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #282c34;
+  border-right: #0676cc 0.25rem solid; 
 }

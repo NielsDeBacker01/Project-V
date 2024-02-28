@@ -1,7 +1,7 @@
 import React from 'react';
 import Sketch from 'react-p5';
 
-const Graph = () => {
+const Graph1 = () => {
   let randomY = [];
   let numPts = 25;
 
@@ -48,4 +48,4 @@ const Graph = () => {
   return <Sketch setup={setup} draw={draw} />;
 };
 
-export default Graph;
+export default Graph1;

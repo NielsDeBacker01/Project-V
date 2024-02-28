@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App text="here is some prop text"/>
+  <App/>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,7 +1,9 @@
 import './App.css';
 import React, { Component } from "react";
 import EventService from '../../services/EventService';
-import Graph from '../graph/Graph';
+import Graph1 from '../graph/Graph1';
+import Graph2 from '../graph/Graph2';
+import Sidebar from '../sidebar/Sidebar';
 
 class App extends Component {
 
@@ -9,7 +11,25 @@ class App extends Component {
     super(props);
     this.state = {
       eventData: null,
+      selectedGraph: null,
     };
+
+    this.handleGraphSelect = this.handleGraphSelect.bind(this);
+  }
+
+  handleGraphSelect(index) {
+    this.setState({ selectedGraph: index });
+  }
+
+  getSelectedGraph() {
+    switch (this.state.selectedGraph) {
+      case 0:
+        return <Graph1 />;
+      case 1:
+        return <Graph2 />;
+      default:
+        return <div>Select a graph to display</div>;
+    }
   }
 
   componentDidMount() {
@@ -28,13 +48,14 @@ class App extends Component {
   render() {
     const { eventData } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          <p>
-            {this.props.text}
-          </p>
+      <main className="App">
+        <Sidebar onGraphSelect={this.handleGraphSelect} />
+        <body className="App-body">
 
-          <Graph/>
+          <div className="content">
+            <h2>Graph</h2>
+            {this.getSelectedGraph()}
+          </div>
 
           {eventData && (
             <div>
@@ -42,8 +63,8 @@ class App extends Component {
               <pre>{JSON.stringify(eventData)}</pre>
             </div>
           )}
-        </header>
-      </div>
+        </body>
+      </main>
     )
   }
 }
