@@ -1,44 +1,51 @@
-import React, { Component } from "react";
-import p5 from 'p5';
+import React from 'react';
+import Sketch from 'react-p5';
 
-class Graph extends Component {
+const Graph = () => {
+  let randomY = [];
+  let numPts = 25;
 
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-    this.state = {
-      isP5Initialized: false
-    };
-  }
-
-  componentDidUpdate() {
-    if (!this.state.isP5Initialized) {
-      this.initP5();
-      this.setState({ isP5Initialized: true });
+  const setup = (p5, canvasParentRef) => {
+    p5.createCanvas(400, 400).parent(canvasParentRef);
+    p5.background(220);
+    for (let i = 0; i < numPts; i++) {
+      randomY.push(p5.random(100, 300));
     }
-  }
+  };
 
-  initP5() {
-    this.myP5 = new p5(this.sketch, this.myRef.current);
-  }
-  
-  sketch(p) {
-    p.setup = () => {
-      p.createCanvas(400, 400);
-      p.background(220);
-    };
+  const draw = p5 => {
+    drawLines(p5);
+    drawEllipses(p5);
+  };
 
-    p.draw = () => {
-      p.fill(255, 0, 0);
-      p.ellipse(200, 200, 50, 50);
-    };
-  }
+  const drawEllipses = p5 => {
+    p5.noStroke();
 
-  render() {
-    return (
-      <div ref={this.myRef}></div>
-    )
-  }
-}
+    for (let i = 0; i < randomY.length; i++) {
+      const x = i * (p5.width / (numPts - 1));
+      const y = randomY[i];
+      p5.ellipse(x, y, 7);
+    }
+  };
+
+  const drawLines = p5 => {
+    p5.stroke(0);
+
+    let px = 0;
+    let py = randomY[0];
+
+    for (let i = 0; i < randomY.length; i++) {
+      const x = i * (p5.width / (numPts - 1));
+      const y = randomY[i];
+
+      p5.line(px, py, x, y);
+
+      px = x;
+      py = y;
+    }
+  };
+
+  return <Sketch setup={setup} draw={draw} />;
+};
 
 export default Graph;

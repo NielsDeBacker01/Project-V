@@ -1,7 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
 import EventService from '../../services/EventService';
-import p5 from 'p5';
 import Graph from '../graph/Graph';
 
 class App extends Component {
@@ -32,12 +31,11 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <Graph/>
-          <p>
             {this.props.text}
           </p>
+
+          <Graph/>
+
           {eventData && (
             <div>
               <h2>Event Data</h2>
