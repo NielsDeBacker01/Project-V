@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import EventService from '../../services/EventService';
 import Graph1 from '../graph/Graph1';
 import Graph2 from '../graph/Graph2';
+import Graph3 from '../graph/Graph3';
 import Sidebar from '../sidebar/Sidebar';
 
 class App extends Component {
@@ -23,10 +24,12 @@ class App extends Component {
 
   getSelectedGraph() {
     switch (this.state.selectedGraph) {
-      case 0:
-        return <Graph1 />;
       case 1:
+        return <Graph1 />;
+      case 2:
         return <Graph2 />;
+      case 3:
+        return <Graph3 />;
       default:
         return <div>Select a graph to display</div>;
     }
