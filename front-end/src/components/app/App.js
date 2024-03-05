@@ -51,9 +51,9 @@ class App extends Component {
   render() {
     const { eventData } = this.state;
     return (
-      <main className="App">
+      <div className="App">
         <Sidebar onGraphSelect={this.handleGraphSelect} />
-        <body className="App-body">
+        <main className="App-main">
 
           <div className="content">
             <h2>Graph</h2>
@@ -66,8 +66,8 @@ class App extends Component {
               <pre>{JSON.stringify(eventData)}</pre>
             </div>
           )}
-        </body>
-      </main>
+        </main>
+      </div>
     )
   }
 }
