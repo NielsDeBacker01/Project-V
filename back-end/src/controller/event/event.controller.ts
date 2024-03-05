@@ -7,7 +7,7 @@ export class EventController {
 
   @Get('id')
   getEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getEventsBySerieId(series_id);
+    return this.eventService.getDefaultEventsBySerieId(series_id);
   }
 
   /* part of issue 34

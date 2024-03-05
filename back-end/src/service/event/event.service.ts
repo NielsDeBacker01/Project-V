@@ -35,7 +35,8 @@ export class EventService {
     "game-ended-round",]
 
 
-  getDefaultFilterdEventsBySerieId(series_id: string): any {
+  //get events json with common filters
+  getDefaultEventsBySerieId(series_id: string): any {
     const events = this.getRawJsonBySerieId(series_id)
     const newFilters = this.defaultFilters.concat(this.timeRelatedFilters); 
     return this.filterJson(events, newFilters);
