@@ -41,8 +41,8 @@ class App extends Component {
 
   async fetchEventData() {
     try {
-      //const eventData = await EventService.getEventsBySerieId("0000000");
-      const eventData = await EventService.getEventsBySerieId("2616320");
+      const eventData = await EventService.getEventsBySerieId("0000000");
+      //const eventData = await EventService.getEventsBySerieId("2616320");
       this.setState({ eventData });
     } catch (error) {
       console.error('Error fetching event data:', error);

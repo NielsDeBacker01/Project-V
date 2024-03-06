@@ -63,29 +63,32 @@ export class EventService {
 
   //applies all necessary filters to a json
   private filterJson(unfilteredJson: any, bannedEventTypes: string[]): any {
+    //removes unwanted event types
     unfilteredJson = this.removeEventTypesFromJson(bannedEventTypes, unfilteredJson);
-    unfilteredJson = this.removeFieldsFromJson(["correlationId","seriesId"],unfilteredJson);
+    //removes unwanted fields from the transaction/events (not including actor/target fields)
+    unfilteredJson = this.removeFieldsFromJson(["id","correlationId","seriesId"],
+      ["id","includesFullState","seriesStateDelta","seriesState"],
+      unfilteredJson);
     return unfilteredJson;
   }
 
   //delete unnecessary fields that are standard
-  private removeFieldsFromJson(fieldsToDelete: string[], unfilteredJson: any): any {
-    const filteredJson = unfilteredJson.map(item => {
-      //standard fields in transactions
-      delete item.id;
-      delete item.correlationId;
-      delete item.seriesId;
+  private removeFieldsFromJson(transactionFieldsToDelete: string[], eventFieldsToDelete: string[], unfilteredJson: any): any {
+    const filteredJson = unfilteredJson.map(transaction => {
+      //fields in transactions
+      transactionFieldsToDelete.forEach(field => {
+        delete transaction[field];
+      });
 
-      //standard fields included in events
-      if (item.events && item.events.length > 0) {
-        item.events.forEach(event => {
-          delete event.id;
-          delete event.includesFullState;
-          delete event.seriesStateDelta;
-          delete event.seriesState;
+      //fields included in events
+      if (transaction.events && transaction.events.length > 0) {
+        transaction.events.forEach(event => {
+          eventFieldsToDelete.forEach(field => {
+            delete event[field];
+          });
         });
       }
-      return item;
+      return transaction;
     });
     return filteredJson;
   }
@@ -98,7 +101,6 @@ export class EventService {
         item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
       }
     }
-
     //return only the transactions that still have an event
     return jsonData.filter(item => item.events && item.events.length > 0);
   }
