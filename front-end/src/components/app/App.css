@@ -13,12 +13,10 @@
 }
 
 pre {
-  overflow: hidden;
-  overflow-y: scroll;
   white-space: pre-wrap;
   font-size: small;
-  height: 25vh;
   border: black 0.1rem solid;
+  text-align: left;
 }
 
 .sidebar {

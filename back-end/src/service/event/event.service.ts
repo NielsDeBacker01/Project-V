@@ -17,12 +17,12 @@ export class EventService {
   timeRelatedFilters: string[] = [
     "round-started-freezetime", "round-ended-freezetime", "freezetime-started-timeout",
     "freezetime-ended-timeout", "game-set-clock", "game-started-clock",
-    "game-stopped-clock",]
+    "game-stopped-clock"]
   //deletes events with data regarding the state of a bomb in a game like Valorant
   bombRelatedFilters: string[] = [
     "player-completed-plantBomb", "team-completed-plantBomb", "team-completed-defuseBomb",
     "player-completed-defuseBomb", "player-completed-beginDefuseBomb", "player-completed-reachDefuseBombCheckpoint",
-    "player-completed-stopDefuseBomb", "player-completed-explodeBomb", "team-completed-explodeBomb",]
+    "player-completed-stopDefuseBomb", "player-completed-explodeBomb", "team-completed-explodeBomb"]
   //deletes events with data regarding the combat and actions of players and their teams
   combatRelatedFilters: string[] = [
     "player-revived-player", "player-selfrevived-player", "game-killed-player",
@@ -32,7 +32,7 @@ export class EventService {
   gameStructureRelatedFilters: string[] = [
     "team-won-series", "team-won-game", "series-started-game",
     "series-ended-game", "team-won-round", "game-started-round",
-    "game-ended-round",]
+    "game-ended-round"]
 
 
   //get events json with common filters
@@ -64,18 +64,42 @@ export class EventService {
   //applies all necessary filters to a json
   private filterJson(unfilteredJson: any, bannedEventTypes: string[]): any {
     unfilteredJson = this.removeEventTypesFromJson(bannedEventTypes, unfilteredJson);
+    unfilteredJson = this.removeFieldsFromJson(["correlationId","seriesId"],unfilteredJson);
     return unfilteredJson;
+  }
+
+  //delete unnecessary fields that are standard
+  private removeFieldsFromJson(fieldsToDelete: string[], unfilteredJson: any): any {
+    const filteredJson = unfilteredJson.map(item => {
+      //standard fields in transactions
+      delete item.id;
+      delete item.correlationId;
+      delete item.seriesId;
+
+      //standard fields included in events
+      if (item.events && item.events.length > 0) {
+        item.events.forEach(event => {
+          delete event.id;
+          delete event.includesFullState;
+          delete event.seriesStateDelta;
+          delete event.seriesState;
+        });
+      }
+      return item;
+    });
+    return filteredJson;
   }
 
   //deletes a list of events from a json
   private removeEventTypesFromJson(bannedEventTypes: string[], jsonData: any): any {
+    //remove all events that meet the given criteria
     for (const item of jsonData) {
       if (item.events) {
-        //remove all events that meet the given criteria
         item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
       }
     }
-    //return only the items that still have an event
+
+    //return only the transactions that still have an event
     return jsonData.filter(item => item.events && item.events.length > 0);
   }
 
