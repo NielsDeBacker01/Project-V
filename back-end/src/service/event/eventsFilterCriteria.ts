@@ -2,21 +2,29 @@ export class eventsFilterCriteria {
     bannedEventTypes: string[];
     transactionFieldsToDelete: string[];
     eventFieldsToDelete: string[];
+    actorTargetFieldsToDelete: object;
+
    
     //provides default values that are usually what is needed
     constructor() {
-       this.bannedEventTypes = this.filters.defaultFilters.concat(this.filters.timeRelatedFilters);
-       this.transactionFieldsToDelete = [
+      this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
+      this.transactionFieldsToDelete = [
          "id", "correlationId", "seriesId"];
-       this.eventFieldsToDelete = [
+      this.eventFieldsToDelete = [
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
+      this.actorTargetFieldsToDelete = {
+         series: ["id","placeholder"],
+         game: ["id","placeholder"],
+         team: ["id","placeholder"],
+         player: ["id","placeholder"],
+      }
     }
 
    //Available filter sets for use in bannedEventTypes
    //for now these only take in to account the events from Valorant games
 
    //deletes events with usually unimportant data
-   filters = {
+   eventTypefilterTemplates = {
       defaultFilters: [
          "grid-started-feed", "grid-sampled-feed", "grid-sampled-tournament",
          "grid-sampled-series", "grid-invalidated-series", "grid-validated-series",

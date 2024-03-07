@@ -15,7 +15,7 @@ export class EventService {
   }
 
   //get the full json event file by id
-  private getRawJsonBySerieId(series_id: string): any{
+  private getRawJsonBySerieId(series_id: string): any {
     try {
       const eventData = fs.readFileSync(`../data/events_${series_id}_grid.jsonl`, 'utf8');
       const lines = eventData.split('\n').filter(line => line.trim() !== '');
@@ -40,33 +40,8 @@ export class EventService {
     unfilteredJson = this.removeEventTypesFromJson(chosenFilterCriteria, unfilteredJson);
     //removes unwanted fields from the transaction/events (not including actor/target fields)
     unfilteredJson = this.removeFieldsFromJson(chosenFilterCriteria, unfilteredJson);
-          
+
     return unfilteredJson;
-  }
-
-  //delete unnecessary fields that are standard
-  private removeFieldsFromJson(chosenFilterCriteria: eventsFilterCriteria, unfilteredJson: any): any {
-    const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
-    const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
-
-    const filteredJson = unfilteredJson.map(transaction => {
-      //fields in transactions
-      transactionFieldsToDelete.forEach(field => {
-        delete transaction[field];
-      });
-
-      //fields included in events
-      if (transaction.events && transaction.events.length > 0) {
-        transaction.events.forEach(event => {
-          eventFieldsToDelete.forEach(field => {
-            delete event[field];
-          });
-        });
-      }
-      return transaction;
-    });
-    
-    return filteredJson;
   }
 
   //deletes a list of events from a json
@@ -81,6 +56,50 @@ export class EventService {
     }
     //return only the transactions that still have an event
     return jsonData.filter(item => item.events && item.events.length > 0);
+  }
+
+  //delete unnecessary fields from a filterCriteria
+  private removeFieldsFromJson(chosenFilterCriteria: eventsFilterCriteria, unfilteredJson: any): any {
+    const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
+    const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
+    const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;
+
+    const filteredJson = unfilteredJson.map(transaction => {
+      //fields in transactions
+      transactionFieldsToDelete.forEach(field => {
+        delete transaction[field];
+      });
+
+      //fields included in events
+      if (transaction.events && transaction.events.length > 0) {
+        transaction.events.forEach(event => {
+          //delete fields for a certain type of event actor
+          if(event.actor && event.actor.type && actorTargetFieldsToDelete[event.actor.type] )
+          {
+            actorTargetFieldsToDelete[event.actor.type].forEach(field => {
+              delete event.actor.stateDelta[field];
+            });
+          }
+
+          //delete fields for a certain type of event target
+          if(event.target && event.target.type && actorTargetFieldsToDelete[event.target.type] )
+          {
+            actorTargetFieldsToDelete[event.target.type].forEach(field => {
+              delete event.target.state[field];
+              delete event.target.stateDelta[field];
+            });
+          }
+
+          //delete generic event fields
+          eventFieldsToDelete.forEach(field => {
+            delete event[field];
+          });
+        });
+      }
+      return transaction;
+    });
+
+    return filteredJson;
   }
 
   /* part of issue 34
