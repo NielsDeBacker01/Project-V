@@ -1,45 +1,17 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
+import { eventsFilterCriteria } from './eventsFilterCriteria';
 
 @Injectable()
 export class EventService {
-
-  //Available filter sets for use in removeEventTypesFromJson
-  //for now these only take in to account the events from Valorant games
-
-  //deletes events with usually unimportant data
-  defaultFilters: string[] = [
-    "grid-started-feed", "grid-sampled-feed", "grid-sampled-tournament",
-    "grid-sampled-series", "grid-invalidated-series", "grid-validated-series",
-    "grid-ended-feed", "player-left-series", "player-rejoined-series",
-    "tournament-started-series", "tournament-ended-series"]
-  //deletes events with data regarding the time/breaks in a match
-  timeRelatedFilters: string[] = [
-    "round-started-freezetime", "round-ended-freezetime", "freezetime-started-timeout",
-    "freezetime-ended-timeout", "game-set-clock", "game-started-clock",
-    "game-stopped-clock"]
-  //deletes events with data regarding the state of a bomb in a game like Valorant
-  bombRelatedFilters: string[] = [
-    "player-completed-plantBomb", "team-completed-plantBomb", "team-completed-defuseBomb",
-    "player-completed-defuseBomb", "player-completed-beginDefuseBomb", "player-completed-reachDefuseBombCheckpoint",
-    "player-completed-stopDefuseBomb", "player-completed-explodeBomb", "team-completed-explodeBomb"]
-  //deletes events with data regarding the combat and actions of players and their teams
-  combatRelatedFilters: string[] = [
-    "player-revived-player", "player-selfrevived-player", "game-killed-player",
-    "player-killed-player", "player-selfkilled-player", "player-teamkilled-player",
-    "player-pickedUp-item", "player-dropped-item", "player-used-ability"]
-  //deletes events with data regarding the state of rounds, games and series
-  gameStructureRelatedFilters: string[] = [
-    "team-won-series", "team-won-game", "series-started-game",
-    "series-ended-game", "team-won-round", "game-started-round",
-    "game-ended-round"]
-
+  //defaultFilters contains all values most often used to filter a json of events
+  //to change filter criteria you need to make a new instance of eventsFilterCriteria and edit that one
+  defaultFilters: Readonly<eventsFilterCriteria> = new eventsFilterCriteria();
 
   //get events json with common filters
   getDefaultEventsBySerieId(series_id: string): any {
-    const events = this.getRawJsonBySerieId(series_id)
-    const bannedEventTypes = this.defaultFilters.concat(this.timeRelatedFilters);
-    return this.filterJson(events,bannedEventTypes);
+    const events = this.getRawJsonBySerieId(series_id);
+    return this.filterJson(events, this.defaultFilters);
   }
 
   //get the full json event file by id
@@ -62,22 +34,21 @@ export class EventService {
   }
 
   //applies all necessary filters to a json
-  private filterJson(unfilteredJson: any, bannedEventTypes: string[], 
-    transactionFieldsToDelete: string[] = ["id","correlationId","seriesId"], 
-    eventFieldsToDelete: string[] = ["id","includesFullState","seriesStateDelta","seriesState"]
+  private filterJson(unfilteredJson: any, chosenFilterCriteria: eventsFilterCriteria
   ): any {
     //removes unwanted event types
-    unfilteredJson = this.removeEventTypesFromJson(bannedEventTypes, unfilteredJson);
+    unfilteredJson = this.removeEventTypesFromJson(chosenFilterCriteria, unfilteredJson);
     //removes unwanted fields from the transaction/events (not including actor/target fields)
-    unfilteredJson = this.removeFieldsFromJson(transactionFieldsToDelete,
-          eventFieldsToDelete,
-          unfilteredJson);
+    unfilteredJson = this.removeFieldsFromJson(chosenFilterCriteria, unfilteredJson);
           
     return unfilteredJson;
   }
 
   //delete unnecessary fields that are standard
-  private removeFieldsFromJson(transactionFieldsToDelete: string[], eventFieldsToDelete: string[], unfilteredJson: any): any {
+  private removeFieldsFromJson(chosenFilterCriteria: eventsFilterCriteria, unfilteredJson: any): any {
+    const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
+    const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
+
     const filteredJson = unfilteredJson.map(transaction => {
       //fields in transactions
       transactionFieldsToDelete.forEach(field => {
@@ -94,11 +65,14 @@ export class EventService {
       }
       return transaction;
     });
+    
     return filteredJson;
   }
 
   //deletes a list of events from a json
-  private removeEventTypesFromJson(bannedEventTypes: string[], jsonData: any): any {
+  private removeEventTypesFromJson(chosenFilterCriteria: eventsFilterCriteria, jsonData: any): any {
+    const bannedEventTypes = chosenFilterCriteria.bannedEventTypes;
+
     //remove all events that meet the given criteria
     for (const item of jsonData) {
       if (item.events) {
