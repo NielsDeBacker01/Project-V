@@ -73,26 +73,13 @@ export class EventService {
       //fields included in events
       if (transaction.events && transaction.events.length > 0) {
         transaction.events.forEach(event => {
-          //delete fields for a certain type of event actor
-          if(event.actor && event.actor.type && actorTargetFieldsToDelete[event.actor.type] )
-          {
-            actorTargetFieldsToDelete[event.actor.type].forEach(field => {
-              delete event.actor.stateDelta[field];
-            });
-          }
+          // Delete fields for actor and target
+          this.removeFieldsFromEntity(event.actor, actorTargetFieldsToDelete);
+          this.removeFieldsFromEntity(event.target, actorTargetFieldsToDelete);
 
-          //delete fields for a certain type of event target
-          if(event.target && event.target.type && actorTargetFieldsToDelete[event.target.type] )
-          {
-            actorTargetFieldsToDelete[event.target.type].forEach(field => {
-              delete event.target.state[field];
-              delete event.target.stateDelta[field];
-            });
-          }
-
-          //delete generic event fields
+          // Delete generic event fields
           eventFieldsToDelete.forEach(field => {
-            delete event[field];
+              delete event[field];
           });
         });
       }
@@ -100,6 +87,17 @@ export class EventService {
     });
 
     return filteredJson;
+  }
+
+  //remove fields from the state/statedelta for an entity (usually actor/target)
+  private removeFieldsFromEntity(entity, entityFieldsToDelete) {
+    if (entity && entity.type && entityFieldsToDelete[entity.type]) {
+        const fields = entityFieldsToDelete[entity.type];
+        fields.forEach(field => {
+            delete entity.state[field];
+            delete entity.stateDelta[field];
+        });
+    }
   }
 
   /* part of issue 34
