@@ -38,8 +38,8 @@ export class EventService {
   //get events json with common filters
   getDefaultEventsBySerieId(series_id: string): any {
     const events = this.getRawJsonBySerieId(series_id)
-    const newFilters = this.defaultFilters.concat(this.timeRelatedFilters); 
-    return this.filterJson(events, newFilters);
+    const bannedEventTypes = this.defaultFilters.concat(this.timeRelatedFilters);
+    return this.filterJson(events,bannedEventTypes);
   }
 
   //get the full json event file by id
@@ -62,13 +62,17 @@ export class EventService {
   }
 
   //applies all necessary filters to a json
-  private filterJson(unfilteredJson: any, bannedEventTypes: string[]): any {
+  private filterJson(unfilteredJson: any, bannedEventTypes: string[], 
+    transactionFieldsToDelete: string[] = ["id","correlationId","seriesId"], 
+    eventFieldsToDelete: string[] = ["id","includesFullState","seriesStateDelta","seriesState"]
+  ): any {
     //removes unwanted event types
     unfilteredJson = this.removeEventTypesFromJson(bannedEventTypes, unfilteredJson);
     //removes unwanted fields from the transaction/events (not including actor/target fields)
-    unfilteredJson = this.removeFieldsFromJson(["id","correlationId","seriesId"],
-      ["id","includesFullState","seriesStateDelta","seriesState"],
-      unfilteredJson);
+    unfilteredJson = this.removeFieldsFromJson(transactionFieldsToDelete,
+          eventFieldsToDelete,
+          unfilteredJson);
+          
     return unfilteredJson;
   }
 
