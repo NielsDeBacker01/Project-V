@@ -13,10 +13,22 @@ export class eventsFilterCriteria {
       this.eventFieldsToDelete = [
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
       this.actorTargetFieldsToDelete = {
-         series: ["id","placeholder"],
-         game: ["id","placeholder"],
-         team: ["id","placeholder"],
-         player: ["id","placeholder"],
+         series: [],
+         game: [],
+         round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+         clock: ["id", "type"],
+         freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+         timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+         team: [],
+         player: [],
+         item: ["id","statePath"],
+         ability: ["id"],
+         plantBomb: ["id","statePath","type"],
+         defuseBomb: ["id","statePath","type"],
+         beginDefuseBomb: ["id","statePath","type"],
+         reachDefuseBombCheckpoint: ["id","statePath","type"],
+         stopDefuseBomb: ["id","statePath","type"],
+         explodeBomb: ["id","statePath","type"],
       }
     }
 

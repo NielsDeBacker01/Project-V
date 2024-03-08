@@ -90,6 +90,7 @@ export class EventService {
   }
 
   //remove fields from the state/statedelta for an entity (usually actor/target)
+  //also removes the id by default as this is also included in the entity already
   private removeFieldsFromEntity(entity, entityFieldsToDelete) {
     if (entity && entity.type && entityFieldsToDelete[entity.type]) {
         const fields = entityFieldsToDelete[entity.type];
