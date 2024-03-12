@@ -8,7 +8,7 @@ const EventService = {
     },
   }),
 
-  async getEventsBySerieId(serieId) {
+  async getDefaultEventsBySerieId(serieId) {
     try {
       const response = await this.api.get('/id', {
         params: {
@@ -18,6 +18,34 @@ const EventService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching event data by series_id:', error);
+      throw error;
+    }
+  },
+
+  async getKillsEventsBySerieId(serieId) {
+    try {
+      const response = await this.api.get('/kills', {
+        params: {
+          series_id: serieId,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching event data of kills by series_id:', error);
+      throw error;
+    }
+  },
+
+  async getPlayerEventsBySerieId(serieId) {
+    try {
+      const response = await this.api.get('/players', {
+        params: {
+          series_id: serieId,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching event data of players by series_id:', error);
       throw error;
     }
   }
