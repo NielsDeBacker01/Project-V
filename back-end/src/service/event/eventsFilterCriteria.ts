@@ -13,8 +13,8 @@ export class eventsFilterCriteria {
       this.eventFieldsToDelete = [
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
       this.actorTargetFieldsToDelete = {
-         series: [],
-         game: [],
+         series: ["id","games","draftActions"],
+         game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
          round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
          clock: ["id", "type"],
          freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
