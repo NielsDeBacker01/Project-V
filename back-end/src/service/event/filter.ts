@@ -13,7 +13,7 @@ export class FilterNone implements Filter {
 export class FilterKillEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.id !== "0");
+            transaction.events = transaction.events.filter(event => event.action == "killed");
             return transaction;
         });
     }
@@ -22,7 +22,7 @@ export class FilterKillEvents implements Filter {
 export class FilterPlayerEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.id == "0");
+            transaction.events = transaction.events.filter(event => event.actor.type == "player" || event.target.type == "player");
             return transaction;
         });
     }

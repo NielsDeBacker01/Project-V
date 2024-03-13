@@ -5,20 +5,21 @@ import { Filter } from './filter';
 
 @Injectable()
 export class EventService {
-  //defaultFilters contains all values most often used to filter a json of events
+  //defaultCriteria contains is a default eventSelectionCriteria with all values most often used to filter a json of transactions
   //to change filter criteria you need to make a new instance of eventsFilterCriteria and edit that one
   defaultCriteria: Readonly<eventSelectionCriteria> = new eventSelectionCriteria();
 
-  //get events json with default filters and no external criteria
+  //get transaction json with default filters and no external filters
   getDefaultEventsBySerieId(series_id: string): any {
     const json = this.getRawJsonBySerieId(series_id);
     return this.filterJson(json, this.defaultCriteria);
   }
 
-  //get events json with default filters and no external criteria
+  //get events json with default filters and external filters
   getFilteredEventsBySerieId(series_id: string, filter: Filter): any {
     const specifiedFilters = {...this.defaultCriteria};
     specifiedFilters.criteriaFilterer = filter;
+
     const json = this.getRawJsonBySerieId(series_id);
     return this.filterJson(json, specifiedFilters);
   }
@@ -43,73 +44,92 @@ export class EventService {
   }
 
   //applies all necessary filters to a json
-  private filterJson(unfilteredJson: any, chosenFilterCriteria: eventSelectionCriteria
-  ): any {
-    //removes unwanted event types
-    unfilteredJson = this.removeEventsFromJson(chosenFilterCriteria, unfilteredJson);
-    //removes unwanted fields from the transaction/events (not including actor/target fields)
-    unfilteredJson = this.removeFieldsFromJson(chosenFilterCriteria, unfilteredJson);
-    
-    return unfilteredJson.filter(item => item.events && item.events.length > 0);
+  private filterJson(unfilteredJson: any, chosenFilterCriteria: eventSelectionCriteria): any {
+    try {
+      //removes unwanted event types
+      unfilteredJson = this.removeEventsFromJson(chosenFilterCriteria, unfilteredJson);
+      //removes unwanted fields from the transaction/events (not including actor/target fields)
+      unfilteredJson = this.removeFieldsFromJson(chosenFilterCriteria, unfilteredJson);
+
+      return unfilteredJson.filter(item => item.events && item.events.length > 0);
+    } catch (error) {
+      console.error(`Error filtering JSON:`, error);
+      throw new InternalServerErrorException('Error filtering JSON.');
+    }
   }
 
   //deletes a list of events from a json
   private removeEventsFromJson(chosenFilterCriteria: eventSelectionCriteria, jsonData: any): any {
-    const bannedEventTypes = chosenFilterCriteria.bannedEventTypes;
+    try {    
+      const bannedEventTypes = chosenFilterCriteria.bannedEventTypes;
 
-    //remove all events that meet the given criteria
-    for (const item of jsonData) {
-      if (item.events) {
-        item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
+      //remove all events that meet the given criteria
+      for (const item of jsonData) {
+        if (item.events) {
+          item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
+        }
       }
+
+      //remove all events that don't meet the desired filter conditions
+      jsonData = chosenFilterCriteria.criteriaFilterer.filterEvents(jsonData);
+
+      return jsonData.filter(item => item.events && item.events.length > 0);
+    } catch (error) {
+      console.error(`Error removing events from JSON:`, error);
+      throw new InternalServerErrorException('Error removing events from JSON.');
     }
-
-    //remove all events that don't meet the desired filter conditions
-    jsonData = chosenFilterCriteria.criteriaFilterer.filterEvents(jsonData);
-
-    return jsonData.filter(item => item.events && item.events.length > 0);
   }
 
   //delete unnecessary fields from a filterCriteria
   private removeFieldsFromJson(chosenFilterCriteria: eventSelectionCriteria, unfilteredJson: any): any {
-    const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
-    const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
-    const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;
+    try{  
+      const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
+      const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
+      const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;
 
-    const filteredJson = unfilteredJson.map(transaction => {
-      //fields in transactions
-      transactionFieldsToDelete.forEach(field => {
-        delete transaction[field];
+      const filteredJson = unfilteredJson.map(transaction => {
+        //fields in transactions
+        transactionFieldsToDelete.forEach(field => {
+          delete transaction[field];
+        });
+
+        //fields included in events
+        if (transaction.events && transaction.events.length > 0) {
+          transaction.events.forEach(event => {
+            // Delete fields for actor and target
+            this.removeFieldsFromEntity(event.actor, actorTargetFieldsToDelete);
+            this.removeFieldsFromEntity(event.target, actorTargetFieldsToDelete);
+
+            // Delete generic event fields
+            eventFieldsToDelete.forEach(field => {
+                delete event[field];
+            });
+          });
+        }
+        return transaction;
       });
 
-      //fields included in events
-      if (transaction.events && transaction.events.length > 0) {
-        transaction.events.forEach(event => {
-          // Delete fields for actor and target
-          this.removeFieldsFromEntity(event.actor, actorTargetFieldsToDelete);
-          this.removeFieldsFromEntity(event.target, actorTargetFieldsToDelete);
-
-          // Delete generic event fields
-          eventFieldsToDelete.forEach(field => {
-              delete event[field];
-          });
-        });
-      }
-      return transaction;
-    });
-
-    return filteredJson;
+      return filteredJson;
+    } catch (error) {
+      console.error(`Error removing fields from JSON:`, error);
+      throw new InternalServerErrorException('Error removing fields from JSON.');
+    }
   }
 
   //remove fields from the state/statedelta for an entity (usually actor/target)
   //also removes the id by default as this is also included in the entity already
   private removeFieldsFromEntity(entity, entityFieldsToDelete) {
-    if (entity && entity.type && entityFieldsToDelete[entity.type]) {
-        const fields = entityFieldsToDelete[entity.type];
-        fields.forEach(field => {
-            delete entity.state[field];
-            delete entity.stateDelta[field];
-        });
+    try {
+      if (entity && entity.type && entityFieldsToDelete[entity.type]) {
+          const fields = entityFieldsToDelete[entity.type];
+          fields.forEach(field => {
+              delete entity.state[field];
+              delete entity.stateDelta[field];
+          });
+      }
+    } catch (error) {
+      console.error(`Error removing fields from entity:`, error);
+      throw new InternalServerErrorException('Error removing fields from entity.');
     }
   }
 
