@@ -1,11 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { Criteria, CriteriaTemp } from 'src/service/event/criteria';
+import { Filter, FilterKillEvents, FilterPlayerEvents} from 'src/service/event/filter';
 import { EventService } from 'src/service/event/event.service';
 
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
-  fakecriteria: Criteria = new CriteriaTemp();
+  killfilter: Filter = new FilterKillEvents();
+  playerfilter: Filter = new FilterPlayerEvents();
 
   @Get('id')
   getDefaultEventsBySerieId(@Query('series_id') series_id: string): any[] {
@@ -14,12 +15,12 @@ export class EventController {
 
   @Get('kills')
   getKillsEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.fakecriteria);
+    return this.eventService.getFilteredEventsBySerieId(series_id, this.killfilter);
   }
 
   @Get('players')
   getPlayerEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.fakecriteria);
+    return this.eventService.getFilteredEventsBySerieId(series_id, this.playerfilter);
   }
 
   /* part of issue 34

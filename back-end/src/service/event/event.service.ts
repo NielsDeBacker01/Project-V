@@ -1,27 +1,26 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import { eventsFilterCriteria } from './eventsFilterCriteria';
-import { Criteria } from './criteria';
+import { eventSelectionCriteria } from './eventsFilterCriteria';
+import { Filter } from './filter';
 
 @Injectable()
 export class EventService {
-  private readonly logger = new Logger(EventService.name);
-  
   //defaultFilters contains all values most often used to filter a json of events
   //to change filter criteria you need to make a new instance of eventsFilterCriteria and edit that one
-  defaultFilters: Readonly<eventsFilterCriteria> = new eventsFilterCriteria();
+  defaultCriteria: Readonly<eventSelectionCriteria> = new eventSelectionCriteria();
 
   //get events json with default filters and no external criteria
   getDefaultEventsBySerieId(series_id: string): any {
-    const events = this.getRawJsonBySerieId(series_id);
-    return this.filterJson(events, this.defaultFilters);
+    const json = this.getRawJsonBySerieId(series_id);
+    return this.filterJson(json, this.defaultCriteria);
   }
 
   //get events json with default filters and no external criteria
-  getFilteredEventsBySerieId(series_id: string, criteria: Criteria): any {
-    const events = this.getRawJsonBySerieId(series_id);
-    const filteredEvents = this.filterJson(events, this.defaultFilters);
-    return criteria.meetCriteria(filteredEvents);
+  getFilteredEventsBySerieId(series_id: string, filter: Filter): any {
+    const specifiedFilters = {...this.defaultCriteria};
+    specifiedFilters.criteriaFilterer = filter;
+    const json = this.getRawJsonBySerieId(series_id);
+    return this.filterJson(json, specifiedFilters);
   }
 
   //get the full json event file by id
@@ -44,18 +43,18 @@ export class EventService {
   }
 
   //applies all necessary filters to a json
-  private filterJson(unfilteredJson: any, chosenFilterCriteria: eventsFilterCriteria
+  private filterJson(unfilteredJson: any, chosenFilterCriteria: eventSelectionCriteria
   ): any {
     //removes unwanted event types
-    unfilteredJson = this.removeEventTypesFromJson(chosenFilterCriteria, unfilteredJson);
+    unfilteredJson = this.removeEventsFromJson(chosenFilterCriteria, unfilteredJson);
     //removes unwanted fields from the transaction/events (not including actor/target fields)
     unfilteredJson = this.removeFieldsFromJson(chosenFilterCriteria, unfilteredJson);
-
-    return unfilteredJson;
+    
+    return unfilteredJson.filter(item => item.events && item.events.length > 0);
   }
 
   //deletes a list of events from a json
-  private removeEventTypesFromJson(chosenFilterCriteria: eventsFilterCriteria, jsonData: any): any {
+  private removeEventsFromJson(chosenFilterCriteria: eventSelectionCriteria, jsonData: any): any {
     const bannedEventTypes = chosenFilterCriteria.bannedEventTypes;
 
     //remove all events that meet the given criteria
@@ -64,12 +63,15 @@ export class EventService {
         item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
       }
     }
-    //return only the transactions that still have an event
+
+    //remove all events that don't meet the desired filter conditions
+    jsonData = chosenFilterCriteria.criteriaFilterer.filterEvents(jsonData);
+
     return jsonData.filter(item => item.events && item.events.length > 0);
   }
 
   //delete unnecessary fields from a filterCriteria
-  private removeFieldsFromJson(chosenFilterCriteria: eventsFilterCriteria, unfilteredJson: any): any {
+  private removeFieldsFromJson(chosenFilterCriteria: eventSelectionCriteria, unfilteredJson: any): any {
     const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
     const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
     const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;

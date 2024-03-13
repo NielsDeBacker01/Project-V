@@ -41,12 +41,9 @@ class App extends Component {
 
   async fetchEventData() {
     try {
-      const priceFilter = (price) => (item) => item.price <= price;
-      const nameFilter = (name) => (item) => item.name.toLowerCase().includes(name.toLowerCase());
-      const criteria = {priceFilter, nameFilter};
-
-      //const eventData = await EventService.getEventsBySerieId("0000000");
+      //const eventData = await EventService.getDefaultEventsBySerieId("0000000");
       const eventData = await EventService.getKillsEventsBySerieId("0000000");
+      //const eventData = await EventService.getPlayerEventsBySerieId("0000000");
       //const eventData = await EventService.getEventsBySerieId("2616320");
       this.setState({ eventData });
     } catch (error) {

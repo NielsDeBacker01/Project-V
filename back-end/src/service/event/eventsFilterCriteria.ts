@@ -1,8 +1,11 @@
-export class eventsFilterCriteria {
+import { Filter, FilterNone } from "./filter";
+
+export class eventSelectionCriteria {
     bannedEventTypes: string[];
     transactionFieldsToDelete: string[];
     eventFieldsToDelete: string[];
     actorTargetFieldsToDelete: object;
+    criteriaFilterer: Filter;
 
    
     //provides default values that are usually what is needed
@@ -30,6 +33,7 @@ export class eventsFilterCriteria {
          stopDefuseBomb: ["id","statePath","type"],
          explodeBomb: ["id","statePath","type"],
       }
+      this.criteriaFilterer = new FilterNone();
     }
 
    //Available filter sets for use in bannedEventTypes
