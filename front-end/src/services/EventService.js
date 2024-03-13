@@ -1,54 +1,42 @@
 import axios from 'axios';
 
-const EventService = {
-  api: axios.create({
-    baseURL: 'http://localhost:3200/event',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }),
+const baseURL = 'http://localhost:3200/event';
 
-  async getDefaultEventsBySerieId(serieId) {
-    try {
-      const response = await this.api.get('/id', {
-        params: {
-          series_id: serieId,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching event data by series_id:', error);
-      throw error;
-    }
+const EventService = axios.create({
+  baseURL,
+  headers: {
+    'Content-Type': 'application/json',
   },
+});
 
-  async getKillsEventsBySerieId(serieId) {
-    try {
-      const response = await this.api.get('/kills', {
-        params: {
-          series_id: serieId,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching event data of kills by series_id:', error);
-      throw error;
-    }
-  },
-
-  async getPlayerEventsBySerieId(serieId) {
-    try {
-      const response = await this.api.get('/players', {
-        params: {
-          series_id: serieId,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching event data of players by series_id:', error);
-      throw error;
-    }
+const fetchData = async (path, serieId) => {
+  try {
+    const response = await EventService.get(path, {
+      params: {
+        series_id: serieId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching event data from ${path} by series_id:`, error);
+    throw error;
   }
+};
+
+EventService.getDefaultEventsBySerieId = async (serieId) => {
+  return fetchData('/id', serieId);
+};
+
+EventService.getKillsEventsBySerieId = async (serieId) => {
+  return fetchData('/kills', serieId);
+};
+
+EventService.getPlayerEventsBySerieId = async (serieId) => {
+  return fetchData('/players', serieId);
+};
+
+EventService.getPlayerAgainstPlayerEventsBySerieId = async (serieId) => {
+  return fetchData('/player-player', serieId);
 };
 
 export default EventService;
