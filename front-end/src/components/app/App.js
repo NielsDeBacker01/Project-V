@@ -45,6 +45,7 @@ class App extends Component {
       //const eventData = await EventService.getKillsEventsBySerieId("2616320");
       //const eventData = await EventService.getPlayerEventsBySerieId("2616320");
       const eventData = await EventService.getPlayerAgainstPlayerEventsBySerieId("2616320");
+      //const eventData = await EventService.getItemsAndAbilitiesEventsBySerieId("2616320");
       //const eventData = await EventService.getEventsBySerieId("2616320");
       this.setState({ eventData });
     } catch (error) {

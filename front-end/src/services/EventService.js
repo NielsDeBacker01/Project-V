@@ -39,4 +39,8 @@ EventService.getPlayerAgainstPlayerEventsBySerieId = async (serieId) => {
   return fetchData('/player-player', serieId);
 };
 
+EventService.getItemsAndAbilitiesEventsBySerieId = async (serieId) => {
+  return fetchData('/items-and-abilities', serieId);
+};
+
 export default EventService;

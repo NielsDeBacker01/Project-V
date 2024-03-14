@@ -8,14 +8,39 @@ export class AndFilter implements Filter {
     private filter: Filter;
     private otherFilter: Filter;
 
-    constructor(criteria: Filter, otherCriteria: Filter) {
-        this.filter = criteria;
-        this.otherFilter = otherCriteria;
+    constructor(filter: Filter, otherFilter: Filter) {
+        this.filter = filter;
+        this.otherFilter = otherFilter;
     }
 
     filterEvents(transactions: any[]): any[] {
-        const firstFiltered = this.filter.filterEvents(transactions);
+        // make a copy to prevent issues with changes
+        const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
+        const firstFiltered = this.filter.filterEvents(transactionsCopy);
         return this.otherFilter.filterEvents(firstFiltered);
+    }
+}
+
+export class OrFilter implements Filter {
+    private filter: Filter;
+    private otherFilter: Filter;
+
+    constructor(filter: Filter, otherFilter: Filter) {
+        this.filter = filter;
+        this.otherFilter = otherFilter;
+    }
+
+    filterEvents(transactions: any[]): any[] {
+        // make a copy to prevent issues with changes
+        const transactionsCopy1 = transactions.map(transaction => ({ ...transaction }));
+        const transactionsCopy2 = transactions.map(transaction => ({ ...transaction }));
+        const firstFiltered = this.filter.filterEvents(transactionsCopy1);
+        const secondFiltered = this.otherFilter.filterEvents(transactionsCopy2);
+
+        // Merge the results without duplicates
+        const mergedResult = [...firstFiltered, ...secondFiltered.filter(item => !firstFiltered.includes(item))];
+        // Restore sortation after merge
+        return mergedResult.sort((a, b) => a.sequenceNumber - b.sequenceNumber);;
     }
 }
 
