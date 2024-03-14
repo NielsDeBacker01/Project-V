@@ -8,24 +8,17 @@
 
 .head {
     padding: 0.5rem;
-    height: 10vh;
+    height: 10%;
+    height-min: 10rem;
     border-bottom: white 0.15rem solid;
     margin: 0.25rem 0.25rem;
 }
   
 .body {
     display: flex;
+    height: 90%;
     flex-direction: column;
     padding: 0.5rem;
     overflow-y: scroll;
-}
-
-.body button {
-    color: white;
-    background-color: #0062AA;
-    margin: 0.25rem 0.5rem;
-    padding: 0.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1rem;
+    gap: 0.5rem;
 }
