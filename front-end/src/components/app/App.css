@@ -20,6 +20,11 @@ pre {
   margin: 1rem;
 }
 
+canvas {
+  max-width: 75vw;
+  height: auto;
+}
+
 *{
   font-family: 'Outfit', sans-serif;
 }

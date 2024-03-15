@@ -1,11 +1,33 @@
 .body button {
     color: white;
     background-color: #0062AA;
-    margin: 0rem 0.25rem;
-    padding: 0.2rem 0.5rem;
+    margin: 0.1rem 0.25rem;
+    padding: 0.25rem 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    font-size: 1rem;
+    font-size: 1.5rem;
     display: flex;
     text-align: center;
+    align-items: center;
+}
+
+.body button:hover {
+    background-color: #014373;
+}
+
+.body button:active {
+    background-color: #013257;
+    color: gray;
+
+}
+
+.body button p {
+    margin: 0.25rem;
+    font-size: 1.3rem;
+    width: 85%;
+}
+
+.icon {
+    margin-right: 0.25rem;
+    width: 10%;
 }
