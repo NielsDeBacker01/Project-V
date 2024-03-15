@@ -19,6 +19,6 @@
     height: 90%;
     flex-direction: column;
     padding: 0.5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
     gap: 0.5rem;
 }

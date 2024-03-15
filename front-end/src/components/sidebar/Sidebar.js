@@ -13,17 +13,15 @@ const Sidebar = ({ onGraphSelect }) => (
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 1"} graphNumber={1}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 2"} graphNumber={2}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 3"} graphNumber={3}></SidebarButton>
-      <SidebarButton onGraphSelect={onGraphSelect} label={"A Graph 1"} graphNumber={1}></SidebarButton>
-      <SidebarButton onGraphSelect={onGraphSelect} label={"A Graph 2"} graphNumber={2}></SidebarButton>
-      <SidebarButton onGraphSelect={onGraphSelect} label={"A Graph 3"} graphNumber={3}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph with longer name"} graphNumber={1}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 2"} graphNumber={2}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"W"} graphNumber={3}></SidebarButton>
-      <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 1"} graphNumber={1}></SidebarButton>
-      <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 2"} graphNumber={2}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Another graph with a name that is too long"} graphNumber={3}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 1"} graphNumber={1}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"W"} graphNumber={2}></SidebarButton>
+      <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 3"} graphNumber={3}></SidebarButton>
+      <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 3"} graphNumber={3}></SidebarButton>
+      <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 3"} graphNumber={3}></SidebarButton>
       <SidebarButton onGraphSelect={onGraphSelect} label={"Graph 3"} graphNumber={3}></SidebarButton>
     </div>
   </div>

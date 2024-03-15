@@ -6,7 +6,7 @@ const Graph3 = () => {
   let numPts = 100;
 
   const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(1200, 400).parent(canvasParentRef);
+    p5.createCanvas(1100, 400).parent(canvasParentRef);
     p5.background(255,204,0);
     for (let i = 0; i < numPts; i++) {
       randomY.push(p5.random(100, 300));

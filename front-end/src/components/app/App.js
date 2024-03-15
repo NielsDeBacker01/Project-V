@@ -48,29 +48,21 @@ class App extends Component {
       //const eventData = await EventService.getItemsAndAbilitiesEventsBySerieId("2616320");
       //const eventData = await EventService.getEventsBySerieId("2616320");
       this.setState({ eventData });
+      console.log(eventData)
     } catch (error) {
       console.error('Error fetching event data:', error);
     }
   }
 
   render() {
-    const { eventData } = this.state;
     return (
       <div className="App">
         <Sidebar onGraphSelect={this.handleGraphSelect} />
         <main className="App-main">
 
           <div className="content">
-            <h2>Graph</h2>
             {this.getSelectedGraph()}
           </div>
-
-          {eventData && (
-            <div>
-              <h2>Event Data</h2>
-              <pre>{JSON.stringify(eventData, null, 2)}</pre>
-            </div>
-          )}
 
         </main>
       </div>
