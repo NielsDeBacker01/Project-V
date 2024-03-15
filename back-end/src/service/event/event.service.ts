@@ -16,12 +16,9 @@ export class EventService {
   }
 
   //get events json with default filters and external filters
-  getFilteredEventsBySerieId(series_id: string, filter: Filter): any {
-    const specifiedFilters = {...this.defaultCriteria};
-    specifiedFilters.criteriaFilterer = filter;
-
+  getFilteredEventsBySerieId(series_id: string, filter: eventSelectionCriteria): any {
     const json = this.getRawJsonBySerieId(series_id);
-    return this.filterJson(json, specifiedFilters);
+    return this.filterJson(json, filter);
   }
 
   //get the full json event file by id
@@ -60,7 +57,7 @@ export class EventService {
 
   //deletes a list of events from a json
   private removeEventsFromJson(chosenFilterCriteria: eventSelectionCriteria, jsonData: any): any {
-    try {    
+    try {
       const bannedEventTypes = chosenFilterCriteria.bannedEventTypes;
 
       //remove all events that meet the given criteria
@@ -82,10 +79,11 @@ export class EventService {
 
   //delete unnecessary fields from a filterCriteria
   private removeFieldsFromJson(chosenFilterCriteria: eventSelectionCriteria, unfilteredJson: any): any {
-    try{  
+    try {
       const transactionFieldsToDelete = chosenFilterCriteria.transactionFieldsToDelete;
       const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
       const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;
+      const seriesStateAndDeltaExceptions = chosenFilterCriteria.seriesStateAndDeltaExceptions;
 
       const filteredJson = unfilteredJson.map(transaction => {
         //fields in transactions
@@ -102,7 +100,16 @@ export class EventService {
 
             // Delete generic event fields
             eventFieldsToDelete.forEach(field => {
+              //apply exceptions for seriesState/seriesStateDelta
+              if (field == "seriesStateDelta" || field == "seriesState") {
+                event[field] = this.removeFieldsWithExceptions(event[field], seriesStateAndDeltaExceptions);
+                if (Object.keys(event[field]).length === 0) {
+                  delete event[field];
+                }
+              }
+              else {
                 delete event[field];
+              }
             });
           });
         }
@@ -116,16 +123,39 @@ export class EventService {
     }
   }
 
+  //removes all fields (and sub fields) from an object except for certain names in parameter: exceptions;
+  private removeFieldsWithExceptions(object, exceptions) {
+    const filterResult = {};
+
+    //check all fields of current object for actions
+    //if object was empty recursion stops at this level
+    for (const field in object) {
+      if (exceptions.includes(field)) {
+        //adds the field and relevant id in the object and then returns it up the recursion
+        filterResult["id"] = object["id"];
+        filterResult[field] = object[field];
+      } else if (typeof object[field] === 'object' && object[field] !== null) {
+        //digs a level deeper in the object and appends the result if succesfull back into the current level
+        const filteredSubObj = this.removeFieldsWithExceptions(object[field], exceptions);
+        if (Object.keys(filteredSubObj).length > 0) {
+          filterResult[field] = filteredSubObj;
+        }
+      }
+    }
+
+    return filterResult;
+  }
+
   //remove fields from the state/statedelta for an entity (usually actor/target)
   //also removes the id by default as this is also included in the entity already
   private removeFieldsFromEntity(entity, entityFieldsToDelete) {
     try {
       if (entity && entity.type && entityFieldsToDelete[entity.type]) {
-          const fields = entityFieldsToDelete[entity.type];
-          fields.forEach(field => {
-              delete entity.state[field];
-              delete entity.stateDelta[field];
-          });
+        const fields = entityFieldsToDelete[entity.type];
+        fields.forEach(field => {
+          delete entity.state[field];
+          delete entity.stateDelta[field];
+        });
       }
     } catch (error) {
       console.error(`Error removing fields from entity:`, error);

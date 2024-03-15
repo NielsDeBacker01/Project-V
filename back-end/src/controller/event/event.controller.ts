@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AndFilter, Filter, FilterAbilityEvents, FilterActorPlayerEvents, FilterItemEvents, FilterKillEvents, FilterTargetPlayerEvents, OrFilter } from 'src/service/event/filter';
 import { EventService } from 'src/service/event/event.service';
+import { eventSelectionCriteria } from 'src/service/event/eventsFilterCriteria';
 
 @Controller('event')
 export class EventController {
@@ -20,22 +21,31 @@ export class EventController {
 
   @Get('kills')
   getKillsEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.killFilter);
+    const filters = new eventSelectionCriteria;
+    filters.criteriaFilterer = this.killFilter;
+    filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"]
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   @Get('players')
   getPlayerEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.playerActorFilter);
+    const filters = new eventSelectionCriteria;
+    filters.criteriaFilterer = this.playerActorFilter;
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   @Get('player-player')
   getPlayerAgainstPlayerEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.playerAgainstPlayerFilter);
+    const filters = new eventSelectionCriteria;
+    filters.criteriaFilterer = this.playerAgainstPlayerFilter;
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   @Get('items-and-abilities')
   getItemsAndAbilitiesEventsBySerieId(@Query('series_id') series_id: string): any[] {
-    return this.eventService.getFilteredEventsBySerieId(series_id, this.itemOrAbilityFilter);
+    const filters = new eventSelectionCriteria;
+    filters.criteriaFilterer = this.itemOrAbilityFilter;
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   /* part of issue 34

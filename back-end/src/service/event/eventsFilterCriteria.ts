@@ -1,12 +1,12 @@
 import { Filter, FilterNone } from "./filter";
 
 export class eventSelectionCriteria {
-    bannedEventTypes: string[];
-    transactionFieldsToDelete: string[];
-    eventFieldsToDelete: string[];
-    actorTargetFieldsToDelete: object;
-    criteriaFilterer: Filter;
-
+   bannedEventTypes: string[];
+   transactionFieldsToDelete: string[];
+   eventFieldsToDelete: string[];
+   actorTargetFieldsToDelete: object;
+   criteriaFilterer: Filter;
+   seriesStateAndDeltaExceptions: string[]
    
     //provides default values that are usually what is needed
     constructor() {
@@ -34,6 +34,7 @@ export class eventSelectionCriteria {
          explodeBomb: ["id","statePath","type"],
       }
       this.criteriaFilterer = new FilterNone();
+      this.seriesStateAndDeltaExceptions = [];
     }
 
    //Available filter sets for use in bannedEventTypes
