@@ -31,7 +31,7 @@ class App extends Component {
       case 3:
         return <Graph3 />;
       default:
-        return <div>Select a graph to display</div>;
+        return <div class="react-p5">Select a graph to display</div>;
     }
   }
 
