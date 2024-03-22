@@ -94,3 +94,36 @@ export class FilterItemEvents implements Filter {
         });
     }
 }
+
+export class NearFilter implements Filter {
+    private xLocation: number;
+    private yLocation: number;
+    private range: number;
+
+    constructor(xLocation: number, yLocation: number, range: number) {
+        this.xLocation = xLocation;
+        this.yLocation = yLocation;
+        this.range = range;
+    }
+
+    checkIfPlayerIsInRange(player: any): boolean{
+        if(player.type == "player" )
+        {
+            const xActor = player.state.game.position.x;
+            const yActor = player.actor.state.game.position.y;
+            //formule om verschil tussen 2 punten te bereken. True als player binnen range is
+            if(Math.sqrt(Math.pow(this.xLocation - xActor, 2) + Math.pow(this.yLocation - yActor, 2)) <= this.range)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    filterEvents(transactions: any[]): any[] {
+        return transactions.map(transaction => {
+            transaction.events = transaction.events.filter(event => this.checkIfPlayerIsInRange(event.actor) || this.checkIfPlayerIsInRange(event.target));
+            return transaction;
+        });
+    }
+}
