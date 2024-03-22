@@ -1,10 +1,10 @@
 import './App.css';
 import React, { Component } from "react";
-import EventService from '../../services/EventService';
 import Graph1 from '../graph/Graph1';
 import Graph2 from '../graph/Graph2';
 import Graph3 from '../graph/Graph3';
 import Sidebar from '../sidebar/Sidebar';
+import Kills from '../graph/Kills';
 
 class App extends Component {
 
@@ -30,28 +30,10 @@ class App extends Component {
         return <Graph2 />;
       case 3:
         return <Graph3 />;
+      case 4:
+        return <Kills />;
       default:
-        return <div class="react-p5">Select a graph to display</div>;
-    }
-  }
-
-  componentDidMount() {
-    this.fetchEventData();
-  }
-
-  async fetchEventData() {
-    try {
-      //const eventData = await EventService.getDefaultEventsBySerieId("0000000");
-      //const eventData = await EventService.getKillsEventsBySerieId("2616320");
-      const eventData = await EventService.getEventsNearPointBySerieId("2616320");
-      //const eventData = await EventService.getPlayerEventsBySerieId("2616320");
-      //const eventData = await EventService.getPlayerAgainstPlayerEventsBySerieId("2616320");
-      //const eventData = await EventService.getItemsAndAbilitiesEventsBySerieId("2616320");
-      //const eventData = await EventService.getEventsBySerieId("2616320");
-      this.setState({ eventData });
-      console.log(eventData)
-    } catch (error) {
-      console.error('Error fetching event data:', error);
+        return <div className="react-p5">Select a graph to display</div>;
     }
   }
 
