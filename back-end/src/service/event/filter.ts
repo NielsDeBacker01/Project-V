@@ -110,7 +110,7 @@ export class NearFilter implements Filter {
         if(player.type == "player" )
         {
             const xActor = player.state.game.position.x;
-            const yActor = player.actor.state.game.position.y;
+            const yActor = player.state.game.position.y;
             //formule om verschil tussen 2 punten te bereken. True als player binnen range is
             if(Math.sqrt(Math.pow(this.xLocation - xActor, 2) + Math.pow(this.yLocation - yActor, 2)) <= this.range)
             {

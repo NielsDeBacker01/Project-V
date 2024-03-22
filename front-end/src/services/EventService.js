@@ -43,4 +43,8 @@ EventService.getItemsAndAbilitiesEventsBySerieId = async (serieId) => {
   return fetchData('/items-and-abilities', serieId);
 };
 
+EventService.getEventsNearPointBySerieId = async (serieId) => {
+  return fetchData('/near-test', serieId);
+};
+
 export default EventService;

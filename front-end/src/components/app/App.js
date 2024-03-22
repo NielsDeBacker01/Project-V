@@ -42,7 +42,8 @@ class App extends Component {
   async fetchEventData() {
     try {
       //const eventData = await EventService.getDefaultEventsBySerieId("0000000");
-      const eventData = await EventService.getKillsEventsBySerieId("2616320");
+      //const eventData = await EventService.getKillsEventsBySerieId("2616320");
+      const eventData = await EventService.getEventsNearPointBySerieId("2616320");
       //const eventData = await EventService.getPlayerEventsBySerieId("2616320");
       //const eventData = await EventService.getPlayerAgainstPlayerEventsBySerieId("2616320");
       //const eventData = await EventService.getItemsAndAbilitiesEventsBySerieId("2616320");
