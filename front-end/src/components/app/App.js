@@ -5,6 +5,7 @@ import Graph2 from '../graph/Graph2';
 import Graph3 from '../graph/Graph3';
 import Sidebar from '../sidebar/Sidebar';
 import Kills from '../graph/Kills';
+import NearPoint from '../graph/NearPoint';
 
 class App extends Component {
 
@@ -32,6 +33,8 @@ class App extends Component {
         return <Graph3 />;
       case 4:
         return <Kills />;
+      case 5:
+        return <NearPoint />;
       default:
         return <div className="react-p5">Select a graph to display</div>;
     }
