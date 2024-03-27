@@ -21,7 +21,7 @@
   "scripts": {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:backend": "cd ../back-end && npm run start:dev",
-    "start:frontend": "set PORT=3100 && react-scripts start",
+    "start:frontend": "set HTTPS=true && set PORT=3100 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
