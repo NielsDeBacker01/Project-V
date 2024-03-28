@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import { Filter, FilterNone } from "./filter";
 
 export class eventSelectionCriteria {
@@ -9,10 +10,10 @@ export class eventSelectionCriteria {
    seriesStateAndDeltaExceptions: string[]
    
     //provides default values that are usually what is needed
-    constructor(game: GameTitles) {
+    constructor(game: GameTitle, filter: Filter = new FilterNone()) {
       //filters with fields that might be game specific
       switch (game) {
-         case GameTitles.VALORANT:
+         case GameTitle.VALORANT:
             this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
             this.actorTargetFieldsToDelete = {
                series: ["id","games","draftActions"],
@@ -38,7 +39,7 @@ export class eventSelectionCriteria {
          "id", "correlationId", "seriesId"];
       this.eventFieldsToDelete = [
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
-      this.criteriaFilterer = new FilterNone();
+      this.criteriaFilterer = filter;
       this.seriesStateAndDeltaExceptions = [];
     }
 
@@ -77,6 +78,6 @@ export class eventSelectionCriteria {
 
 }
 
-export enum GameTitles {
+export enum GameTitle {
    VALORANT = 'VALORANT'
 }
