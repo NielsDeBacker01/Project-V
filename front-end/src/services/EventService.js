@@ -11,11 +11,13 @@ const EventService = axios.create({
 
 const fetchData = async (path, serieId) => {
   try {
+    console.time('BackendCall');
     const response = await EventService.get(path, {
       params: {
         series_id: serieId,
       },
     });
+    console.timeEnd('BackendCall');
     return response.data;
   } catch (error) {
     console.error(`Error fetching event data from ${path} by series_id:`, error);
