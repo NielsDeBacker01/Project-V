@@ -4,10 +4,11 @@ import React, { useEffect, useState } from 'react';
 
 const NearPoint = () => {
   const [eventData, setEventData] = useState(null);
+
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        const data = await EventService.getEventsNearPointBySerieId("2616320");
+        const data = await EventService.getValorantEventsNearPointBySerieId("2616320");
         console.log(data);
         setEventData(data);
       } catch (error) {

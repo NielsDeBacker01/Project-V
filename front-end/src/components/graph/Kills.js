@@ -8,7 +8,7 @@ const Kills = () => {
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        const data = await EventService.getKillsEventsBySerieId("2616320");
+        const data = await EventService.getValorantKillsEventsBySerieId("2616320");
         console.log(data);
         const result = filterEventData(data);
         setFilteredData(result);

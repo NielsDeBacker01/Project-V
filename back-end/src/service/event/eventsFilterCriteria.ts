@@ -9,30 +9,35 @@ export class eventSelectionCriteria {
    seriesStateAndDeltaExceptions: string[]
    
     //provides default values that are usually what is needed
-    constructor() {
-      this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
+    constructor(game: GameTitles) {
+      //filters with fields that might be game specific
+      switch (game) {
+         case GameTitles.VALORANT:
+            this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
+            this.actorTargetFieldsToDelete = {
+               series: ["id","games","draftActions"],
+               game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
+               round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               clock: ["id", "type"],
+               freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               team: [],
+               player: [],
+               item: ["id","statePath"],
+               ability: ["id"],
+               plantBomb: ["id","statePath","type"],
+               defuseBomb: ["id","statePath","type"],
+               beginDefuseBomb: ["id","statePath","type"],
+               reachDefuseBombCheckpoint: ["id","statePath","type"],
+               stopDefuseBomb: ["id","statePath","type"],
+               explodeBomb: ["id","statePath","type"],
+            }
+      }
+      //default filters that are the same for each game title
       this.transactionFieldsToDelete = [
          "id", "correlationId", "seriesId"];
       this.eventFieldsToDelete = [
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
-      this.actorTargetFieldsToDelete = {
-         series: ["id","games","draftActions"],
-         game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
-         round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
-         clock: ["id", "type"],
-         freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
-         timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
-         team: [],
-         player: [],
-         item: ["id","statePath"],
-         ability: ["id"],
-         plantBomb: ["id","statePath","type"],
-         defuseBomb: ["id","statePath","type"],
-         beginDefuseBomb: ["id","statePath","type"],
-         reachDefuseBombCheckpoint: ["id","statePath","type"],
-         stopDefuseBomb: ["id","statePath","type"],
-         explodeBomb: ["id","statePath","type"],
-      }
       this.criteriaFilterer = new FilterNone();
       this.seriesStateAndDeltaExceptions = [];
     }
@@ -69,4 +74,9 @@ export class eventSelectionCriteria {
          "game-ended-round"
       ]
    };
+
+}
+
+export enum GameTitles {
+   VALORANT = 'VALORANT'
 }

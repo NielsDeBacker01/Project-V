@@ -23,28 +23,28 @@ const fetchData = async (path, serieId) => {
   }
 };
 
-EventService.getDefaultEventsBySerieId = async (serieId) => {
-  return fetchData('/id', serieId);
+EventService.getValorantDefaultEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/default', serieId);
 };
 
-EventService.getKillsEventsBySerieId = async (serieId) => {
-  return fetchData('/kills', serieId);
+EventService.getValorantKillsEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/kills', serieId);
 };
 
-EventService.getPlayerEventsBySerieId = async (serieId) => {
-  return fetchData('/players', serieId);
+EventService.getValorantPlayerEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/players', serieId);
 };
 
-EventService.getPlayerAgainstPlayerEventsBySerieId = async (serieId) => {
-  return fetchData('/player-player', serieId);
+EventService.getValorantPlayerAgainstPlayerEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/player-player', serieId);
 };
 
-EventService.getItemsAndAbilitiesEventsBySerieId = async (serieId) => {
-  return fetchData('/items-and-abilities', serieId);
+EventService.getValorantItemsAndAbilitiesEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/items-and-abilities', serieId);
 };
 
-EventService.getEventsNearPointBySerieId = async (serieId) => {
-  return fetchData('/near-test', serieId);
+EventService.getValorantEventsNearPointBySerieId = async (serieId) => {
+  return fetchData('/valorant/near-test', serieId);
 };
 
 export default EventService;

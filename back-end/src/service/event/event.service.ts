@@ -1,18 +1,15 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import { eventSelectionCriteria } from './eventsFilterCriteria';
+import { GameTitles, eventSelectionCriteria } from './eventsFilterCriteria';
 import { Filter } from './filter';
 
 @Injectable()
 export class EventService {
-  //defaultCriteria contains is a default eventSelectionCriteria with all values most often used to filter a json of transactions
-  //to change filter criteria you need to make a new instance of eventsFilterCriteria and edit that one
-  defaultCriteria: Readonly<eventSelectionCriteria> = new eventSelectionCriteria();
-
   //get transaction json with default filters and no external filters
-  getDefaultEventsBySerieId(series_id: string): any {
+  getDefaultEventsBySerieId(series_id: string, gameTitle: GameTitles): any {
+    const defaultCriteria: eventSelectionCriteria = new eventSelectionCriteria(gameTitle);
     const json = this.getRawJsonBySerieId(series_id);
-    return this.filterJson(json, this.defaultCriteria);
+    return this.filterJson(json, defaultCriteria);
   }
 
   //get events json with default filters and external filters
