@@ -40,6 +40,8 @@ export class EventService {
   //applies all necessary filters to a json
   private filterJson(unfilteredJson: any, chosenFilterCriteria: eventSelectionCriteria): any {
     try {
+      //remove all events that don't meet the desired filter conditions
+      unfilteredJson = chosenFilterCriteria.criteriaFilterer.filterEvents(unfilteredJson);
       //removes unwanted event types
       unfilteredJson = this.removeEventsFromJson(chosenFilterCriteria, unfilteredJson);
       //removes unwanted fields from the transaction/events (not including actor/target fields)
@@ -59,13 +61,14 @@ export class EventService {
 
       //remove all events that meet the given criteria
       for (const item of jsonData) {
-        if (item.events) {
+        if (Array.isArray(item.events)) {
           item.events = item.events.filter(event => !bannedEventTypes.includes(event.type));
         }
+        else if (item.events) {
+          // item.events should always be an array
+          throw new Error('item.events is not an array.');
+        }
       }
-
-      //remove all events that don't meet the desired filter conditions
-      jsonData = chosenFilterCriteria.criteriaFilterer.filterEvents(jsonData);
 
       return jsonData.filter(item => item.events && item.events.length > 0);
     } catch (error) {
@@ -81,7 +84,7 @@ export class EventService {
       const eventFieldsToDelete = chosenFilterCriteria.eventFieldsToDelete;
       const actorTargetFieldsToDelete = chosenFilterCriteria.actorTargetFieldsToDelete;
       const seriesStateAndDeltaExceptions = chosenFilterCriteria.seriesStateAndDeltaExceptions;
-
+      
       const filteredJson = unfilteredJson.map(transaction => {
         //fields in transactions
         transactionFieldsToDelete.forEach(field => {
@@ -98,7 +101,7 @@ export class EventService {
             // Delete generic event fields
             eventFieldsToDelete.forEach(field => {
               //apply exceptions for seriesState/seriesStateDelta
-              if (field == "seriesStateDelta" || field == "seriesState") {
+              if ((event.seriesStateDelta && field == "seriesStateDelta") || (event.seriesState && field == "seriesState")) {
                 event[field] = this.removeFieldsWithExceptions(event[field], seriesStateAndDeltaExceptions);
                 if (Object.keys(event[field]).length === 0) {
                   delete event[field];
