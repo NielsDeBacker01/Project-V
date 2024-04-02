@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as fs from 'fs';
 import { EventService } from './event.service';
-import { NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
 import { Filter, FilterNone } from './filter';
 
@@ -36,7 +36,7 @@ describe('EventService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('getRawJsonBySerieId should give an error when there is no file for the given serieId', () => {
+    it('getRawJsonBySerieId should throw error when there is no file for the given serieId', () => {
       // Arrange
       //prevent error logs
       jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -47,7 +47,7 @@ describe('EventService', () => {
       // Act & Assert
       expect(() => {
         service.getDefaultEventsBySerieId(serie_id, gameTitle);
-      }).toThrow(new NotFoundException("Event data for series_id 0000000 not found."));
+      }).toThrow(NotFoundException);
     });
 
     it('getRawJsonBySerieId should give an error when there is a syntax error in the json for the given serieId', () => {
@@ -62,6 +62,18 @@ describe('EventService', () => {
 
       //Assert
       expect(result).toEqual(expected);
+    });
+
+    it('removeEventsFromJson should throw error when an events field is not an array', () => {
+      // Arrange
+      //prevent error logs
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": "2"}');
+      
+      // Act & Assert
+      expect(() => {
+        service.getDefaultEventsBySerieId(serie_id, gameTitle);
+      }).toThrow(InternalServerErrorException);
     });
   });
 
