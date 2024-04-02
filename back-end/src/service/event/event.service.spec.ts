@@ -17,9 +17,10 @@ describe('EventService', () => {
     serie_id = "0000000";
     gameTitle = GameTitle.VALORANT;
     filter = new FilterNone;
+  });
 
-    //prevent error logs
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('getDefaultEventsBySerieId', () => {
@@ -35,8 +36,10 @@ describe('EventService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should give an error when there is no file for the given serieId', () => {
+    it('getRawJsonBySerieId should give an error when there is no file for the given serieId', () => {
       // Arrange
+      //prevent error logs
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
         throw new Error('File not found');
       });
@@ -45,6 +48,20 @@ describe('EventService', () => {
       expect(() => {
         service.getDefaultEventsBySerieId(serie_id, gameTitle);
       }).toThrow(new NotFoundException("Event data for series_id 0000000 not found."));
+    });
+
+    it('getRawJsonBySerieId should give an error when there is a syntax error in the json for the given serieId', () => {
+      // Arrange
+      const expected = [{"events": ["1"]}];
+      //prevent error logs
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events" = ["2"]}');
+      
+      // Act
+      const result = service.getDefaultEventsBySerieId(serie_id, gameTitle);
+
+      //Assert
+      expect(result).toEqual(expected);
     });
   });
 

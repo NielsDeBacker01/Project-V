@@ -30,7 +30,8 @@ export class EventService {
           console.error(`Error parsing JSON of line "${line}":`, error);
           return { "status": "failed" };
         }
-      });
+      })
+      
     } catch (error) {
       console.error(`Error reading file ../data/events_${series_id}_grid.jsonl: ${error}`);
       throw new NotFoundException(`Event data for series_id ${series_id} not found.`);
