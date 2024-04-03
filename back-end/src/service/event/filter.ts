@@ -95,7 +95,7 @@ export class FilterKillEvents implements Filter {
 export class FilterActorPlayerEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.actor.type == "player");
+            transaction.events = transaction.events.filter(event => event.actor?.type == "player");
             return transaction;
         });
     }
@@ -104,7 +104,7 @@ export class FilterActorPlayerEvents implements Filter {
 export class FilterTargetPlayerEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.target.type == "player");
+            transaction.events = transaction.events.filter(event => event.target?.type == "player");
             return transaction;
         });
     }
@@ -113,7 +113,7 @@ export class FilterTargetPlayerEvents implements Filter {
 export class FilterAbilityEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.actor.type == "ability" || event.target.type == "ability");
+            transaction.events = transaction.events.filter(event => event.actor?.type == "ability" || event.target?.type == "ability");
             return transaction;
         });
     }
@@ -122,7 +122,7 @@ export class FilterAbilityEvents implements Filter {
 export class FilterItemEvents implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions.map(transaction => {
-            transaction.events = transaction.events.filter(event => event.actor.type == "item" || event.target.type == "item");
+            transaction.events = transaction.events.filter(event => event.actor?.type == "item" || event.target?.type == "item");
             return transaction;
         });
     }

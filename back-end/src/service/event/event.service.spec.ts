@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { EventService } from './event.service';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
-import { Filter, FilterNone } from './filter';
+import { AndFilter, Filter, FilterActorPlayerEvents, FilterNone, FilterTargetPlayerEvents } from './filter';
 
 describe('EventService', () => {
   let service: EventService;
@@ -78,10 +78,25 @@ describe('EventService', () => {
   });
 
   describe('getFilteredEventsBySerieId', () => {
-    it('should return a list of events for a certain serieId, simplified with the given filters', () => {
+    it('should return a list of filtered events for a certain serieId and eventselectionCriteria', () => {
       // Arrange    
       const expected = [{ events: ['1'] }, { events: ['2'] }];
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": ["2"]}');
+      
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
+
+      //Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a list of filtered events for a certain serieId with a special event criteria filter', () => {
+      // Arrange
+      filter = new AndFilter(new FilterActorPlayerEvents(), new FilterTargetPlayerEvents());;    
+      const expected = [
+        { events: [{ type: 'player-act-player', actor: { type: 'player', id: '1', stateDelta: { id: '1' }, state: { id: '1' } }, action: 'act', target: { type: 'player', id: '2', stateDelta: { id: '2' }, state: { id: '2' } } }] },
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "player-act-player", "actor": { "type": "player", "id": "1", "stateDelta": { "id": "1" }, "state": { "id": "1" } }, "action": "act", "target": { "type": "player", "id": "2", "stateDelta": {"id": "2" }, "state": { "id": "2" } } }] }\n{ "events": ["2"] }');
       
       // Act
       const result = service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
