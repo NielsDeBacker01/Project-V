@@ -94,7 +94,7 @@ export class EventService {
 
         //fields included in events
         if (transaction.events && transaction.events.length > 0) {
-          transaction.events.forEach(event => {
+          transaction.events = transaction.events.filter(event => {
             // Delete fields for actor and target (if those exist)
             this.removeFieldsFromEntity(event.actor, actorTargetFieldsToDelete);
             this.removeFieldsFromEntity(event.target, actorTargetFieldsToDelete);
@@ -112,6 +112,8 @@ export class EventService {
                 delete event[field];
               }
             });
+            
+            return Object.keys(event).length !== 0;
           });
         }
         return transaction;

@@ -24,7 +24,7 @@ describe('EventService', () => {
   });
 
   describe('getDefaultEventsBySerieId', () => {
-    it('should return a list of events for a certain serieId, simplified with the default filters', () => {
+    it('should return a list of events for a serieId, simplified with the default filters', () => {
       // Arrange
       const expected = [{ events: ['1'] }, { events: ['2'] }];
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": ["2"]}');
@@ -78,7 +78,7 @@ describe('EventService', () => {
   });
 
   describe('getFilteredEventsBySerieId', () => {
-    it('should return a list of filtered events for a certain serieId and eventselectionCriteria', () => {
+    it('should return a list of events for a serieId that is unfiltered because it passed all filters', () => {
       // Arrange    
       const expected = [{ events: ['1'] }, { events: ['2'] }];
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": ["2"]}');
@@ -90,7 +90,7 @@ describe('EventService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a certain serieId with a special event criteria filter', () => {
+    it('should return a list of filtered events for a serieId with specified event criteria', () => {
       // Arrange
       filter = new AndFilter(new FilterActorPlayerEvents(), new FilterTargetPlayerEvents());;    
       const expected = [
@@ -104,5 +104,92 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
+
+    it('should return a list of filtered events for a serieId with specificied events removed', () => {
+      // Arrange
+      const filters = new eventSelectionCriteria(gameTitle, filter);
+      filters.bannedEventTypes = ["removable"]
+      const expected = [
+        { events: [{ type: 'unremovable' }] },
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "unremovable" }] }\n{ "events": [{ "type": "removable" }] }');
+      
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+
+      //Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a list of filtered events for a serieId with specificied transaction fields removed, empty objects are removed', () => {
+      // Arrange
+      const filters = new eventSelectionCriteria(gameTitle, filter);
+      filters.transactionFieldsToDelete = ["transactionDelete"];
+      const expected = [
+        { events: [{ dontDelete: '1'}]}
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{ "dontDelete": "1"}]}\n{"transactionDelete":"delete", "events": []}');
+
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+
+      //Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a list of filtered events for a serieId with specificied event fields removed, empty objects are removed', () => {
+      // Arrange
+      const filters = new eventSelectionCriteria(gameTitle, filter);
+      filters.eventFieldsToDelete = ["eventDelete"];
+      const expected = [
+        { events: [{ dontDelete: '1'}]}
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"dontDelete": "1", "eventDelete":"delete"}]}\n{"events": [{"eventDelete":"delete"}]}');
+      
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+
+      //Assert
+      expect(result).toEqual(expected);
+    });
+/*
+    it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', () => {
+      // Arrange
+      const filters = new eventSelectionCriteria(gameTitle, filter);
+      filters.actorTargetFieldsToDelete = {
+        ...filters.actorTargetFieldsToDelete,
+        actorDelete: ["fieldDelete"]
+      };
+      const expected = [
+        { events: [{ id: '1', actor: { notDelete: { field: '1' }, state: { notDelete: { field: '1' }}}, stateDelta: { notDelete: '1' }, seriesStateDelta: { notDelete: '1' }}]}
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{"eventDelete":"delete", "id": "1", "actor": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }, "state": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }} }, "seriesState": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}, "seriesStateDelta": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}}], "seriesStateDelta": { "noDelete": "1" , "delete": "1" }}\n
+                                                      {"transactionDelete":"delete", "events": [{"eventDelete":"delete2",           "actor": { "actorDelete": { "fieldDelete": "2" }},                                     "state": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }} }, "seriesState": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}, "seriesStateDelta": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}}], "seriesStateDelta": { "noDelete": "2" , "delete": "2" }}');
+
+      
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+
+      //Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a list of filtered events for a serieId with seriesState/seriesStateDelta fields removed keeping in mind the exceptions, empty objects get removed', () => {
+      // Arrange
+      const filters = new eventSelectionCriteria(gameTitle, filter);
+      filters.seriesStateAndDeltaExceptions = ["notDelete"];
+      const expected = [
+        { events: [{ id: '1', actor: { notDelete: { field: '1' }, state: { notDelete: { field: '1' }}}, stateDelta: { notDelete: '1' }, seriesStateDelta: { notDelete: '1' }}]}
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{"eventDelete":"delete", "id": "1", "actor": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }, "state": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }} }, "seriesState": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}, "seriesStateDelta": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}}], "seriesStateDelta": { "noDelete": "1" , "delete": "1" }}\n
+                                                      {"transactionDelete":"delete", "events": [{"eventDelete":"delete2",           "actor": { "actorDelete": { "fieldDelete": "2" }},                                     "state": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }} }, "seriesState": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}, "seriesStateDelta": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}}], "seriesStateDelta": { "noDelete": "2" , "delete": "2" }}');
+
+      
+      // Act
+      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+
+      //Assert
+      expect(result).toEqual(expected);
+    });*/
   });
 });
