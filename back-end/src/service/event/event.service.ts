@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, Logger, NotFoundException } f
 import * as fs from 'fs';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
 import { Filter } from './filter';
+import { Console } from 'console';
 
 @Injectable()
 export class EventService {
@@ -156,8 +157,8 @@ export class EventService {
       if (entity && entity.type && entityFieldsToDelete[entity.type]) {
         const fields = entityFieldsToDelete[entity.type];
         fields.forEach(field => {
-          delete entity.state[field];
-          delete entity.stateDelta[field];
+          delete entity.state?.[field];
+          delete entity.stateDelta?.[field];
         });
       }
     } catch (error) {

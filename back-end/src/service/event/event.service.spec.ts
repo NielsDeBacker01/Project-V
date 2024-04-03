@@ -152,28 +152,27 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-/*
+    
     it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.actorTargetFieldsToDelete = {
         ...filters.actorTargetFieldsToDelete,
-        actorDelete: ["fieldDelete"]
+        test: ["delete"]
       };
-      const expected = [
-        { events: [{ id: '1', actor: { notDelete: { field: '1' }, state: { notDelete: { field: '1' }}}, stateDelta: { notDelete: '1' }, seriesStateDelta: { notDelete: '1' }}]}
-      ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{"eventDelete":"delete", "id": "1", "actor": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }, "state": { "actorDelete": { "fieldDelete": "1" }, "notDelete": { "fieldDelete": "1" }} }, "seriesState": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}, "seriesStateDelta": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }}}], "seriesStateDelta": { "noDelete": "1" , "delete": "1" }}\n
-                                                      {"transactionDelete":"delete", "events": [{"eventDelete":"delete2",           "actor": { "actorDelete": { "fieldDelete": "2" }},                                     "state": { "actorDelete": { "field": "1" }, "notDelete": { "field": "1" }} }, "seriesState": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}, "seriesStateDelta": { "actorDelete": { "field": "2" }, "notDelete": { "field": "2" }}}], "seriesStateDelta": { "noDelete": "2" , "delete": "2" }}');
 
-      
+      const expected = [
+        { events: [{ actor: { type: "test", state: { notDelete: "1"}}}]}
+      ];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"actor": { "type": "test", "state": { "delete": "1", "notDelete": "1"} }}]}');
+
       // Act
       const result = service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
-
+    /*
     it('should return a list of filtered events for a serieId with seriesState/seriesStateDelta fields removed keeping in mind the exceptions, empty objects get removed', () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
