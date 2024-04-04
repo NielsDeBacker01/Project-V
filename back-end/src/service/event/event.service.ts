@@ -1,8 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
-import { Filter } from './filter';
-import { Console } from 'console';
 
 @Injectable()
 export class EventService {

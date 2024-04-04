@@ -77,6 +77,27 @@ export class NearFilter implements Filter {
     }
 }
 
+export class SequenceFilter implements Filter {
+    private filter: Filter;
+    private otherFilter: Filter;
+    private beforeLimit: number;
+    private afterLimit: number;
+
+    constructor(filter: Filter, otherFilter: Filter, beforeLimit: number, afterLimit: number ) {
+        this.filter = filter;
+        this.otherFilter = otherFilter;
+        this.beforeLimit = beforeLimit;
+        this.afterLimit = afterLimit;
+    }
+
+    filterEvents(transactions: any[]): any[] {
+        // make a copy to prevent issues with changes
+        const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
+        //actual logic still needed
+        return transactionsCopy;
+    }
+}
+
 export class FilterNone implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions;

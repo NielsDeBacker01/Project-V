@@ -1,4 +1,3 @@
-import { Optional } from "@nestjs/common";
 import { Filter, FilterNone } from "./filter";
 
 export class eventSelectionCriteria {

@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import * as fs from 'fs';
 import { EventService } from './event.service';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';

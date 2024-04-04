@@ -33,20 +33,12 @@ EventService.getValorantKillsEventsBySerieId = async (serieId) => {
   return fetchData('/valorant/kills', serieId);
 };
 
-EventService.getValorantPlayerEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/players', serieId);
-};
-
-EventService.getValorantPlayerAgainstPlayerEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/player-player', serieId);
-};
-
-EventService.getValorantItemsAndAbilitiesEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/items-and-abilities', serieId);
-};
-
 EventService.getValorantEventsNearPointBySerieId = async (serieId) => {
   return fetchData('/valorant/near-test', serieId);
+};
+
+EventService.getValorantAbilityEventsFollowedByKillEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/sequence-test', serieId);
 };
 
 export default EventService;
