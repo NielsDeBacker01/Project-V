@@ -92,4 +92,5 @@ const Kills = () => {
   return <Sketch setup={setup} draw={draw} />;
 };
 
+Kills.displayName = 'Kills';
 export default Kills;

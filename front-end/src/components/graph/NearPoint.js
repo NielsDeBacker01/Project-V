@@ -42,4 +42,5 @@ const NearPoint = () => {
   return <Sketch setup={setup} draw={draw} />;
 };
 
+NearPoint.displayName = 'Log of events near coordinate [2000, -5000]';
 export default NearPoint;

@@ -1,11 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
-import Graph1 from '../graph/Graph1';
-import Graph2 from '../graph/Graph2';
-import Graph3 from '../graph/Graph3';
 import Sidebar from '../sidebar/Sidebar';
-import Kills from '../graph/Kills';
-import NearPoint from '../graph/NearPoint';
 
 class App extends Component {
 
@@ -13,43 +8,37 @@ class App extends Component {
     super(props);
     this.state = {
       eventData: null,
-      selectedGraph: null,
+      availableGraphs: [],
+      renderGraph: true,
+      //default value if no graph is selected
+      selectedGraph: () => {return <div className="react-p5">Select a graph to display</div>},
     };
-
-    this.handleGraphSelect = this.handleGraphSelect.bind(this);
   }
 
-  handleGraphSelect(index) {
-    this.setState({ selectedGraph: index });
+  componentDidMount() {
+    //collects all components in the graph folder for use in the sidebar
+    const context = require.context('../graph', false, /\.js$/);
+    const graphFiles = context.keys().map(context);
+    const graphComponents = graphFiles.map((file) => file.default);
+    this.setState({ availableGraphs: graphComponents });
   }
 
-  getSelectedGraph() {
-    switch (this.state.selectedGraph) {
-      case 1:
-        return <Graph1 />;
-      case 2:
-        return <Graph2 />;
-      case 3:
-        return <Graph3 />;
-      case 4:
-        return <Kills />;
-      case 5:
-        return <NearPoint />;
-      default:
-        return <div className="react-p5">Select a graph to display</div>;
-    }
-  }
+  //handles sidebar graph selection
+  handleGraphSelect = (graphComponent) => {
+    this.setState({ selectedGraph: graphComponent, renderGraph: false }, () => {
+      //renderGraph state has to be reset to update the render
+      this.setState({renderGraph: true});
+    });
+  };
 
   render() {
     return (
       <div className="App">
-        <Sidebar onGraphSelect={this.handleGraphSelect} />
+        <Sidebar handleGraphSelect={this.handleGraphSelect} availableGraphs={this.state.availableGraphs} />
         <main className="App-main">
-
           <div className="content">
-            {this.getSelectedGraph()}
+            {this.state.renderGraph && this.state.selectedGraph()}
           </div>
-
         </main>
       </div>
     )

@@ -48,4 +48,5 @@ const Graph2 = () => {
   return <Sketch setup={setup} draw={draw} />;
 };
 
+Graph2.displayName = 'Graph 2';
 export default Graph2;
