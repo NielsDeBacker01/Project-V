@@ -37,7 +37,7 @@ class App extends Component {
         <Sidebar handleGraphSelect={this.handleGraphSelect} availableGraphs={this.state.availableGraphs} />
         <main className="App-main">
           <div className="content">
-            {this.state.renderGraph && this.state.selectedGraph()}
+            {this.state.renderGraph && <this.state.selectedGraph/>}
           </div>
         </main>
       </div>
