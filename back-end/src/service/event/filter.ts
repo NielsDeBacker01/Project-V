@@ -89,6 +89,8 @@ export class SequenceFilter implements Filter {
 
     filterEvents(transactions: any[]): any[] {
         const sequenceFilteredTransactions = [];
+        //used to prevent duplicates
+        const sequenceNumbersSet: Set<number> = new Set();
 
         // make a copy to prevent issues with changes
         const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
@@ -96,25 +98,32 @@ export class SequenceFilter implements Filter {
         const secondFiltered = this.otherFilter.filterEvents([...transactions]);
         
         for (const firstTransaction of firstFiltered) {
-            if (firstTransaction.events && Array.isArray(firstTransaction.events) && firstTransaction.events.length > 0)
+            if (firstTransaction.events?.length > 0)
             {
                 const firstTimestamp = new Date(firstTransaction.occurredAt).getTime();
 
                 for (const secondTransaction of secondFiltered) {
-                    if (secondTransaction.events && Array.isArray(secondTransaction.events) && secondTransaction.events.length > 0)
+                    if (secondTransaction.events?.length > 0)
                     {
                         const secondTimestamp = new Date(secondTransaction.occurredAt).getTime();
                         const timeDifference = (secondTimestamp - firstTimestamp)/1000;
                         if (this.beforeLimit <= timeDifference  && timeDifference <= this.afterLimit) {
-                            sequenceFilteredTransactions.push(firstTransaction);
-                            sequenceFilteredTransactions.push(secondTransaction);
+                            if (!sequenceNumbersSet.has(firstTransaction.sequenceNumber)) {
+                                sequenceFilteredTransactions.push(firstTransaction);
+                                sequenceNumbersSet.add(firstTransaction.sequenceNumber);
+                            }
+
+                            if (!sequenceNumbersSet.has(secondTransaction.sequenceNumber)) {
+                                sequenceFilteredTransactions.push(secondTransaction);
+                                sequenceNumbersSet.add(secondTransaction.sequenceNumber);
+                            }
                         }
                     }
                 }
             }
         }
 
-        return sequenceFilteredTransactions.sort((a, b) => a.sequenceNumber - b.sequenceNumber);;
+        return sequenceFilteredTransactions.sort((a, b) => a.sequenceNumber - b.sequenceNumber);
     }
 }
 
