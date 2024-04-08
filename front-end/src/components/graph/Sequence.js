@@ -22,7 +22,7 @@ const NearPoint = () => {
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(600, 400).parent(canvasParentRef);
     p5.fill(255,255,255);
-    p5.textSize(14);
+    p5.textSize(12);
   };
 
   const draw = p5 => {
@@ -30,11 +30,13 @@ const NearPoint = () => {
     p5.clear();
     p5.background(123, 38, 36);
     if (eventData) {
-      let i = 0;
-      eventData.forEach(event => {
-        p5.text(JSON.stringify(event.events[0].actor.state.name) + " at: " + event.occurredAt + ", did: " + event.events[0].type, 50, 50 + (25 * i));
-        i++;
-      });
+      eventData.forEach((event, index) => {
+        const x = 25 + (200 * Math.floor(index / 15));
+        const y = 30 + (25 * (index % 15));
+        p5.text(JSON.stringify(event.events[0].actor.state.name) + ", did: " + event.events[0].target.id, x, y);
+    });
+    
+    
     }
   };
 

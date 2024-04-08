@@ -63,9 +63,8 @@ const Kills = () => {
     p5.clear();
     p5.background(255,255,255);
     if (filteredData) {
-      let i = 0;
       let redTeam = filteredData[0].team;
-      filteredData.forEach(record => {
+      filteredData.forEach((record,index) => {
         let teamColor = p5.color(255,255,255);
         if(redTeam === record.team)
         {
@@ -77,14 +76,13 @@ const Kills = () => {
         }
 
         p5.fill(teamColor);
-        p5.text(record.name + ": " + record.kills, 25, 50 + (50 * i));
+        p5.text(record.name + ": " + record.kills, 25, 50 + (50 * index));
 
         p5.stroke(teamColor)
-        p5.rect(125, 32 + (50 * i), record.kills * 13, 25);
+        p5.rect(125, 32 + (50 * index), record.kills * 13, 25);
 
         p5.noStroke();
         p5.noFill();
-        i++;
       });
     }
   };

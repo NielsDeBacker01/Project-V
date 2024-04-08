@@ -14,9 +14,7 @@ export class AndFilter implements Filter {
     }
 
     filterEvents(transactions: any[]): any[] {
-        // make a copy to prevent issues with changes
-        const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
-        const firstFiltered = this.filter.filterEvents(transactionsCopy);
+        const firstFiltered = this.filter.filterEvents(transactions);
         return this.otherFilter.filterEvents(firstFiltered);
     }
 }
@@ -32,15 +30,14 @@ export class OrFilter implements Filter {
 
     filterEvents(transactions: any[]): any[] {
         // make a copy to prevent issues with changes
-        const transactionsCopy1 = transactions.map(transaction => ({ ...transaction }));
-        const transactionsCopy2 = transactions.map(transaction => ({ ...transaction }));
-        const firstFiltered = this.filter.filterEvents(transactionsCopy1);
-        const secondFiltered = this.otherFilter.filterEvents(transactionsCopy2);
+        const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
+        const firstFiltered = this.filter.filterEvents(transactionsCopy);
+        const secondFiltered = this.otherFilter.filterEvents([...transactions]);
 
         // Merge the results without duplicates
         const mergedResult = [...firstFiltered, ...secondFiltered.filter(item => !firstFiltered.includes(item))];
         // Restore sortation after merge
-        return mergedResult.sort((a, b) => a.sequenceNumber - b.sequenceNumber);;
+        return mergedResult.sort((a, b) => a.sequenceNumber - b.sequenceNumber);
     }
 }
 
@@ -91,10 +88,34 @@ export class SequenceFilter implements Filter {
     }
 
     filterEvents(transactions: any[]): any[] {
+        const sequenceFilteredTransactions = [];
+
         // make a copy to prevent issues with changes
         const transactionsCopy = transactions.map(transaction => ({ ...transaction }));
-        //actual logic still needed
-        return transactionsCopy;
+        const firstFiltered = this.filter.filterEvents(transactionsCopy);
+        const secondFiltered = this.otherFilter.filterEvents([...transactions]);
+        
+        for (const firstTransaction of firstFiltered) {
+            if (firstTransaction.events && Array.isArray(firstTransaction.events) && firstTransaction.events.length > 0)
+            {
+                const firstTimestamp = new Date(firstTransaction.occurredAt).getTime();
+
+                for (const secondTransaction of secondFiltered) {
+                    if (secondTransaction.events && Array.isArray(secondTransaction.events) && secondTransaction.events.length > 0)
+                    {
+                        const secondTimestamp = new Date(secondTransaction.occurredAt).getTime();
+                        const timeDifference = (secondTimestamp - firstTimestamp)/1000;
+                        if (this.beforeLimit <= timeDifference  && timeDifference <= this.afterLimit) {
+                            console.log("did it" + timeDifference + " " + firstTransaction.sequenceNumber + " " + secondTransaction.sequenceNumber);
+                            sequenceFilteredTransactions.push(firstTransaction);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return sequenceFilteredTransactions;
     }
 }
 

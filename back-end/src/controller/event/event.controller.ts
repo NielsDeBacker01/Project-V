@@ -9,7 +9,7 @@ export class EventController {
   playerAgainstPlayerFilter: Filter = new AndFilter(new FilterActorPlayerEvents, new FilterTargetPlayerEvents);
   itemOrAbilityFilter : Filter = new OrFilter(new FilterItemEvents, new FilterAbilityEvents);
   nearCertainPointFilter : Filter = new NearFilter(2000, -5000, 500); 
-  AbilityKillSequenceFilter: Filter = new SequenceFilter(new FilterAbilityEvents, new FilterKillEvents, 0, 2)
+  AbilityKillSequenceFilter: Filter = new SequenceFilter(new FilterAbilityEvents, new FilterKillEvents, 0, 0.5)
 
   @Get(':game')
   getValorantDefaultEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string): any[] {
