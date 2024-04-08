@@ -106,16 +106,15 @@ export class SequenceFilter implements Filter {
                         const secondTimestamp = new Date(secondTransaction.occurredAt).getTime();
                         const timeDifference = (secondTimestamp - firstTimestamp)/1000;
                         if (this.beforeLimit <= timeDifference  && timeDifference <= this.afterLimit) {
-                            console.log("did it" + timeDifference + " " + firstTransaction.sequenceNumber + " " + secondTransaction.sequenceNumber);
                             sequenceFilteredTransactions.push(firstTransaction);
-                            break;
+                            sequenceFilteredTransactions.push(secondTransaction);
                         }
                     }
                 }
             }
         }
 
-        return sequenceFilteredTransactions;
+        return sequenceFilteredTransactions.sort((a, b) => a.sequenceNumber - b.sequenceNumber);;
     }
 }
 

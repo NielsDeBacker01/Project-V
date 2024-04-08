@@ -32,7 +32,7 @@ const NearPoint = () => {
     p5.background(23, 138, 136);
     if (eventData) {
       eventData.forEach((event,index) => {
-        p5.text(JSON.stringify(event.events[0].actor.state.name) + " at: " + event.occurredAt + ", did: " + event.events[0].type, 50, 50 + (25 * index));
+        p5.text(event.events[0].actor.state.name + " at: " + event.occurredAt + ", did: " + event.events[0].type, 50, 50 + (25 * index));
       });
     }
   };
