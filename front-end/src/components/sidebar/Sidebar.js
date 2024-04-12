@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import SidebarButton from './sidebarbutton/SidebarButton';
 
 const Sidebar = ({ handleGraphSelect, availableGraphs }) => (
-  <div className="sidebar">
+  <div className="sidebar" data-testid="sidebar">
     <div className="head">
 
     </div>
