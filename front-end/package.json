@@ -23,7 +23,7 @@
     "start:backend": "cd ../back-end && npm run start:dev",
     "start:frontend": "set HTTPS=true && set PORT=3100 && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -43,5 +43,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.24.1",
+    "babel-plugin-transform-require-context": "^0.1.1",
+    "jest-transform-css": "^6.0.1",
+    "mock-context": "^0.1.1"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.css$": "jest-transform-css"
+    }
   }
 }
