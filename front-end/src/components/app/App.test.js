@@ -11,6 +11,6 @@ test('renders the no graph selected text on start', () => {
 
 test('renders sidebar', () => {
   render(<App />);
-  const sidebarElement = screen.queryByTestId('sidebar');
+  const sidebarElement = screen.getByTestId('sidebar');
   expect(sidebarElement).not.toBeNull();
 });
