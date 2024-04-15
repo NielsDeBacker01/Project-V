@@ -33,7 +33,7 @@ const NearPoint = () => {
       eventData.forEach((event, index) => {
         const x = 25 + (200 * Math.floor(index / 15));
         const y = 30 + (25 * (index % 15));
-        if(event.events[0].action == "killed")
+        if(event.events[0].action === "killed")
         {
           p5.text(event.events[0].actor.state.name + ", killed: " + event.events[0].target.state.name, x, y);
         }
