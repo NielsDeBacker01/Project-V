@@ -1,9 +1,15 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
+import { HttpService } from '@nestjs/axios';
+import * as readline from 'readline';
+import { firstValueFrom } from 'rxjs';
+import * as AdmZip from 'adm-zip';
 
 @Injectable()
 export class EventService {
+  constructor(private httpService: HttpService) {}
+
   //get transaction json with default filters and no external filters
   getDefaultEventsBySerieId(series_id: string, gameTitle: GameTitle): any {
     const defaultCriteria: eventSelectionCriteria = new eventSelectionCriteria(gameTitle);
@@ -20,6 +26,7 @@ export class EventService {
   //get the full json event file by id
   private getRawJsonBySerieId(series_id: string): any {
     try {
+      this.getGridApiJsonBySerieId(series_id);
       const eventData = fs.readFileSync(`../data/events_${series_id}_grid.jsonl`, 'utf8');
       const lines = eventData.split('\n').filter(line => line.trim() !== '');
       return lines.map(line => {
@@ -35,6 +42,40 @@ export class EventService {
       console.error(`Error reading file ../data/events_${series_id}_grid.jsonl: ${error}`);
       throw new NotFoundException(`Event data for series_id ${series_id} not found.`);
     }
+  }
+  
+  //get the full json event file by id from the Grid API
+  private async getGridApiJsonBySerieId(series_id: string): Promise<any[]> {
+    const headers = {
+      'Accept':'application/zip',
+      'x-api-key':process.env.API_KEY
+    };
+
+    series_id = "2661465";
+    const response = await firstValueFrom(this.httpService.get(`https://api.grid.gg/file-download/events/grid/series/${series_id}`, { responseType: 'arraybuffer', headers: headers,  }));
+    
+    const zip = new AdmZip(response.data);
+    const zipEntries = zip.getEntries();
+
+    let jsonlData: string = "";
+    let jsonData: any[] = [];
+    zipEntries.forEach(entry => {
+      if (entry.entryName.endsWith('.jsonl')) {
+        jsonlData = zip.readAsText(entry);
+
+        const lines = jsonlData.split('\n').filter(line => line.trim() !== '');
+        jsonData = lines.map(line => {
+          try {
+            return JSON.parse(line);
+          } catch (error) {
+            console.error(`Error parsing JSON of line "${line}":`, error);
+            return { "status": "failed" };
+          }
+        })
+      }
+    });
+
+    return jsonData;
   }
 
   //applies all necessary filters to a json
@@ -165,19 +206,4 @@ export class EventService {
     }
   }
 
-  /* part of issue 34
-  getEventsByMultipleIds(series_ids: string[]): any {
-    try {
-      if (!Array.isArray(series_ids)) {
-        throw new Error(`series_ids must be an array: ${series_ids}`);
-      }
-
-      const allEvents = series_ids.map(series_id => this.getEventsById(series_id));
-      return [].concat(...allEvents);
-    } catch (error) {
-      console.error(`Error processing multiple series_id for event data: ${error}`);
-      throw new InternalServerErrorException('Error processing multiple event data.');
-    }
-  }
-  */
 }

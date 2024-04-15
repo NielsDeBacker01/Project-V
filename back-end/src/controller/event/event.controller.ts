@@ -37,13 +37,6 @@ export class EventController {
     );
   }
 
-  /* part of issue 34
-  @Get('idlist')
-  getEventsByMultipleIds(@Query('series_ids') series_ids: string[]): any[] {
-    return this.eventService.getEventsByMultipleIds(series_ids);
-  }
-  */
-
   //converts a string to a GameTitle
   private stringToGameTitle(game: string): GameTitle {
     const selectedGame = GameTitle[game.toUpperCase() as keyof typeof GameTitle];
