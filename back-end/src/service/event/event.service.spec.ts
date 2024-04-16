@@ -3,6 +3,7 @@ import { EventService } from './event.service';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
 import { AndFilter, Filter, FilterActorPlayerEvents, FilterNone, FilterTargetPlayerEvents } from './filter';
+import { HttpService } from '@nestjs/axios';
 
 describe('EventService', () => {
   let service: EventService;
@@ -12,7 +13,7 @@ describe('EventService', () => {
 
   beforeEach(() => {
     //setup
-    service = new EventService();
+    service = new EventService(new HttpService);
     serie_id = "0000000";
     gameTitle = GameTitle.VALORANT;
     filter = new FilterNone;
@@ -34,7 +35,7 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-
+    
     it('getRawJsonBySerieId should throw error when there is no file for the given serieId', () => {
       // Arrange
       //prevent error logs
