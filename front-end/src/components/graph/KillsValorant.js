@@ -90,5 +90,5 @@ const Kills = () => {
   return <Sketch setup={setup} draw={draw} />;
 };
 
-Kills.displayName = 'Kills';
+Kills.displayName = 'Kills (Valorant)';
 export default Kills;
