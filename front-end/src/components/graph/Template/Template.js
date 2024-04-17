@@ -3,72 +3,42 @@ import EventService from '../../services/EventService';
 import React, { useEffect, useState } from 'react';
 
 const Graph = () => {
-  /*
-  THIS PART STILL HAS TO BE REWORKED
-  const [filteredData, setFilteredData] = useState(null);
+  //default variable to store data in
+  const [data, setData] = useState(null);
 
+  //this function is used to get the required data
   useEffect(() => {
-    const fetchEventData = async () => {
+    (async () => {
       try {
-        const data = await EventService.getValorantKillsEventsBySerieId("2661465");
-        console.log(data);
-        const result = filterEventData(data);
-        setFilteredData(result);
+        //replace with the function you need from event service to get your data
+        const data = await EventService.getValorantDefaultEventsBySerieId("0000000");
+        //apply an optional extra transformation to the data for easier visualisation
+        const result = transformData(data);
+        //use the setData function to correctly store data
+        setData(result);
       } catch (error) {
         console.error('Error fetching event data:', error);
       }
-    };
-
-    fetchEventData();
-    
+    })();
   }, []);
 
-  const filterEventData = (eventData) => {
-    let killsByActor = {};
-  
-    eventData.forEach((event) => {
-      const events = event.events;
-      for(const transaction of events){
-        const actorId = transaction.actor.id;
-        const kills = transaction.actor.stateDelta.series.kills;
-    
-        if (!killsByActor[actorId]) {
-          const actorName = transaction.actor.state.name;
-          const actorTeamId = transaction.actor.state.teamId;
-          killsByActor[actorId] = {
-            name: actorName,
-            team: actorTeamId,
-            kills: 0            
-          };
-        }    
-        
-        killsByActor[actorId].kills += kills;
-      }
-    });
-  
-    // Convert killsByActor object to array
-    const result = Object.values(killsByActor);
-
-    result.sort((a, b) => b.kills - a.kills);
-
-    return result;
+  const transformData = (data) => {
+    //optionally data transform logic here
+    return data;
   }; 
-  */
 
-  //p5js canvas setup
+  //p5js example canvas setup
   const setup = (p5, canvasParentRef) => {
-    //example canvas settings
     p5.createCanvas(800, 800).parent(canvasParentRef);
   };
 
   //p5js draw loop that automatically gets called every frame
   const draw = p5 => {
-    
     //example to display data
     if (data) {
       //loops over each record in the data with the corresponding index given as a number (usefull for calculations)
       data.forEach((record,index) => {
-        //displays the text above each other
+        //displays the text of each record
         p5.text(record.propertyName, 25, 50 + (50 * index));
       });
     }

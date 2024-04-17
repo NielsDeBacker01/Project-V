@@ -6,7 +6,7 @@ const NearPoint = () => {
   const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
-    const fetchEventData = async () => {
+    (async () => {
       try {
         const data = await EventService.getValorantEventsNearPointBySerieId("2616320");
         console.log(data);
@@ -14,9 +14,7 @@ const NearPoint = () => {
       } catch (error) {
         console.error('Error fetching event data:', error);
       }
-    };
-
-    fetchEventData();
+    })();
   }, []);
 
   const setup = (p5, canvasParentRef) => {

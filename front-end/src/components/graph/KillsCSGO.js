@@ -6,7 +6,7 @@ const Kills = () => {
   const [filteredData, setFilteredData] = useState(null);
 
   useEffect(() => {
-    const fetchEventData = async () => {
+    (async () => {
       try {
         const data = await EventService.getValorantKillsEventsBySerieId("2661465");
         console.log(data);
@@ -15,10 +15,7 @@ const Kills = () => {
       } catch (error) {
         console.error('Error fetching event data:', error);
       }
-    };
-
-    fetchEventData();
-    
+    })();    
   }, []);
 
   const filterEventData = (eventData) => {
