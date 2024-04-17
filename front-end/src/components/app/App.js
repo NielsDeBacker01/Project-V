@@ -17,10 +17,16 @@ class App extends Component {
 
   componentDidMount() {
     //collects all components in the graph folder for use in the sidebar
-    const context = require.context('../graph', false, /\.js$/);
-    const graphFiles = context.keys().map(context);
-    const graphComponents = graphFiles.map((file) => file.default);
-    //console.log(graphFiles);
+    const context = require.context('../graph', true, /\.js$/);
+
+    const graphFiles = context.keys().map((file) => {
+      return {
+        fileName: file.replace(/^.*[\\/]/, ''),
+        component: context(file).default
+      };
+    });
+
+    const graphComponents = graphFiles.map((file) => file.component);
     this.setState({ availableGraphs: graphComponents });
   }
 
@@ -35,7 +41,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Sidebar handleGraphSelect={this.handleGraphSelect} availableGraphs={this.state.availableGraphs} />
+        <Sidebar handleGraphSelect={this.handleGraphSelect} />
         <main className="App-main">
           <div className="content">
             {this.state.renderGraph && <this.state.selectedGraph/>}
