@@ -1,6 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
-import Sidebar from '../sidebar/Sidebar';
+import Sidebar from '@components/sidebar/Sidebar';
 
 class App extends Component {
 
@@ -20,6 +20,7 @@ class App extends Component {
     const context = require.context('../graph', false, /\.js$/);
     const graphFiles = context.keys().map(context);
     const graphComponents = graphFiles.map((file) => file.default);
+    //console.log(graphFiles);
     this.setState({ availableGraphs: graphComponents });
   }
 

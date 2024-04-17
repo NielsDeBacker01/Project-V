@@ -1,5 +1,5 @@
 import Sketch from 'react-p5';
-import EventService from '../../services/EventService';
+import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 
 const Graph = () => {

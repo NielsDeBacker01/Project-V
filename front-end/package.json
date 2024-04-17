@@ -21,8 +21,8 @@
   "scripts": {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:backend": "cd ../back-end && npm run start:dev",
-    "start:frontend": "set HTTPS=true && set PORT=3100 && react-scripts start",
-    "build": "react-scripts build",
+    "start:frontend": "set HTTPS=true && set PORT=3100 && craco start",
+    "build": "craco build",
     "test": "jest",
     "eject": "react-scripts eject"
   },
