@@ -14,7 +14,7 @@ const Graph = () => {
         const data = await EventService.getValorantDefaultEventsBySerieId("0000000");
         //apply an optional extra transformation to the data for easier visualisation
         const result = transformData(data);
-        //use the setData function to correctly store data
+        //use the setData function to correctly store data in the state
         setData(result);
       } catch (error) {
         console.error('Error fetching event data:', error);
