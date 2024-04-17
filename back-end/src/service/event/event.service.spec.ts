@@ -81,21 +81,21 @@ describe('EventService', () => {
       }
     });
   });
-/*
+
   describe('getFilteredEventsBySerieId', () => {
-    it('should return a list of events for a serieId that is unfiltered because it passed all filters', () => {
+    it('should return a list of events for a serieId that is unfiltered because it passed all filters', async () => {
       // Arrange    
       const expected = [{ events: ['1'] }, { events: ['2'] }];
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": ["2"]}');
       
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
+      const result = await service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
 
       //Assert
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a serieId with specified event criteria', () => {
+    it('should return a list of filtered events for a serieId with specified event criteria', async () => {
       // Arrange
       filter = new AndFilter(new FilterActorPlayerEvents(), new FilterTargetPlayerEvents());;    
       const expected = [
@@ -104,13 +104,13 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "player-act-player", "actor": { "type": "player", "id": "1", "stateDelta": { "id": "1" }, "state": { "id": "1" } }, "action": "act", "target": { "type": "player", "id": "2", "stateDelta": {"id": "2" }, "state": { "id": "2" } } }] }\n{ "events": ["2"] }');
       
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
+      const result = await service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
 
       //Assert
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a serieId with specificied events removed', () => {
+    it('should return a list of filtered events for a serieId with specificied events removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.bannedEventTypes = ["removable"]
@@ -120,13 +120,13 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "unremovable" }] }\n{ "events": [{ "type": "removable" }] }');
       
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+      const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a serieId with specificied transaction fields removed, empty objects are removed', () => {
+    it('should return a list of filtered events for a serieId with specificied transaction fields removed, empty objects are removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.transactionFieldsToDelete = ["transactionDelete"];
@@ -136,13 +136,13 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{ "dontDelete": "1"}]}\n{"transactionDelete":"delete", "events": []}');
 
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+      const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a serieId with specificied event fields removed, empty objects are removed', () => {
+    it('should return a list of filtered events for a serieId with specificied event fields removed, empty objects are removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.eventFieldsToDelete = ["eventDelete"];
@@ -152,13 +152,13 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"dontDelete": "1", "eventDelete":"delete"}]}\n{"events": [{"eventDelete":"delete"}]}');
       
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+      const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
     
-    it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', () => {
+    it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.actorTargetFieldsToDelete = {
@@ -172,13 +172,13 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"actor": { "type": "test", "state": { "delete": "1", "notDelete": "1"} }}]}');
 
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+      const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered events for a serieId with seriesState/seriesStateDelta fields removed keeping in mind the exceptions, empty objects get removed', () => {
+    it('should return a list of filtered events for a serieId with seriesState/seriesStateDelta fields removed keeping in mind the exceptions, empty objects get removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.seriesStateAndDeltaExceptions = ["notDelete"];
@@ -188,10 +188,10 @@ describe('EventService', () => {
       jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"seriesState": { "delete": "1", "notDelete": "1"}, "seriesStateDelta": { "delete": "1", "notDelete": "1"}}]}')
       
       // Act
-      const result = service.getFilteredEventsBySerieId(serie_id, filters);
+      const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
     });
-  });*/
+  });
 });
