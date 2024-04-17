@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:backend": "cd ./back-end && npm run start:dev",
+    "start:frontend": "cd ./front-end && set HTTPS=true && set PORT=3100 && react-scripts start",
+    "test": "concurrently \"npm run test:frontend\" \"npm run test:backend\"",
+    "test:backend": "cd ./back-end && npm run test",
+    "test:frontend": "cd ./front-end && npm run test",
+    "eject": "react-scripts eject"
+  }
+}
