@@ -19,7 +19,7 @@ const Sidebar = ({ handleGraphSelect }) => {
     //get list of real folders
     const filteredList = graphFiles.filter(item => item.folderName !== '.' && item.folderName !== 'Template');
     const uniqueNames = new Set(filteredList.map(item => item.folderName));
-    setFolders(Array.from(uniqueNames));
+    setFolders(Array.from(uniqueNames).sort((a, b) => a.localeCompare(b)));
   }, []);
 
   return(
