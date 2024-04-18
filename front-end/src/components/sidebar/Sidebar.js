@@ -5,33 +5,56 @@ import SidebarButton from './sidebarbutton/SidebarButton';
 
 const Sidebar = ({ handleGraphSelect }) => {
   const [availableGraphs, setAvailableGraphs] = useState([]);
-  useEffect(() => {
-    // Collects all components in the graph folder for use in the sidebar
-    const context = require.context('../graph', true, /\.js$/);
+  const [folders, setFolders] = useState([]);
 
+  useEffect(() => {
+    //gets all components in the graph folder for use in the sidebar
+    const context = require.context('../graph', true, /\.js$/);
     const graphFiles = context.keys().map((file) => ({
-      fileName: file.replace(/^.*[\\/]/, ''),
+      folderName: file.split('/').reverse()[1],
       component: context(file).default
     }));
+    setAvailableGraphs(graphFiles);
 
-    const graphComponents = graphFiles.map((file) => file.component);
-    setAvailableGraphs(graphComponents);
+    //get list of real folders
+    const filteredList = graphFiles.filter(item => item.folderName !== '.' && item.folderName !== 'Template');
+    const uniqueNames = new Set(filteredList.map(item => item.folderName));
+    setFolders(Array.from(uniqueNames));
   }, []);
 
   return(
     <div className="sidebar" data-testid="sidebar">
       <div className="head">
-
       </div>
-      {availableGraphs && (
+
+      {availableGraphs && folders && (
         <div className="body">
-        {availableGraphs.map((graph, index) => (
-          <SidebarButton key={index} handleGraphSelect={handleGraphSelect} label={graph.displayName} graph={graph}></SidebarButton>
-        ))}
+          {/* Renders the graphs relative to their corresponding folder*/}
+          {folders.map((folder, index) => (
+            <div className="folder">
+              <p className="folderTitle" key={index}>{folder}</p>
+              {renderGraphsinFolder(folder)}
+            </div>
+          ))}
+          {/* Renders the remaining graphs that are not in a folder */}
+          {renderGraphsinFolder(".")}
         </div>
       )}
+
     </div>
   );
+
+  function renderGraphsinFolder(folder) {
+    return (
+      <div className="folderContent" key={folder}>
+        {availableGraphs.map((graph, index) => (
+          graph.folderName === folder && (
+            <SidebarButton key={index} handleGraphSelect={handleGraphSelect} label={graph.component.displayName} graph={graph.component}/> 
+          )
+        ))}
+      </div>
+    );
+  }
 };
 
 Sidebar.propTypes = {
