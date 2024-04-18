@@ -32,7 +32,7 @@ const Sidebar = ({ handleGraphSelect }) => {
           {/* Renders the graphs relative to their corresponding folder*/}
           {folders.map((folder, index) => (
             <div className="folder">
-              <p className="folderTitle" key={index}>{folder}</p>
+              <p className="folderTitle" key={index}>{folder}:</p>
               {renderGraphsinFolder(folder)}
             </div>
           ))}
