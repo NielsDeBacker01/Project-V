@@ -29,12 +29,15 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding-bottom: 1rem;
 }
 
 .folderTitle {
-    width: 100%;
-    height: 100%;
+    align-self: start;
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
     color: white;
+    margin: 0.5rem 0rem;
 }
 
 .folderContent {
@@ -43,4 +46,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.folder .folderContent {
+    width:auto;
+    margin-left:1rem;
 }
