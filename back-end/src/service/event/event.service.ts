@@ -7,7 +7,7 @@ import * as AdmZip from 'adm-zip';
 
 @Injectable()
 export class EventService {
-  private testDataIds = ["0000000", "2616320", "2628069"];
+  private testDataIds = ["0000000", "2616320", "2628069", "test"];
   constructor(private httpService: HttpService) {}
 
   //get transaction json with default filters and no external filters

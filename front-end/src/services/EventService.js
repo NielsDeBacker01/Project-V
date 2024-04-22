@@ -26,7 +26,7 @@ const fetchData = async (path, serieId) => {
 };
 
 EventService.getValorantDefaultEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/default', serieId);
+  return fetchData('/valorant', serieId);
 };
 
 EventService.getValorantKillsEventsBySerieId = async (serieId) => {
