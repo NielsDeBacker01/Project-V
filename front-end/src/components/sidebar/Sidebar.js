@@ -2,6 +2,8 @@ import './Sidebar.css';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SidebarButton from './sidebarbutton/SidebarButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ handleGraphSelect }) => {
   const [availableGraphs, setAvailableGraphs] = useState([]);
@@ -32,7 +34,10 @@ const Sidebar = ({ handleGraphSelect }) => {
           {/* Renders the graphs relative to their corresponding folder*/}
           {folders.map((folder, index) => (
             <div className="folder">
-              <p className="folderTitle" key={index}>{folder}:</p>
+              <div className="folderLevel">
+                <FontAwesomeIcon icon={faCaretDown} className='icon'/>
+                <p className="folderTitle" key={index}>{folder}:</p>
+              </div>
               {renderGraphsinFolder(folder)}
             </div>
           ))}
