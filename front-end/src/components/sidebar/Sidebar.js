@@ -19,11 +19,12 @@ const Sidebar = ({ handleGraphSelect }) => {
     }));
     setAvailableGraphs(graphFiles);
 
-    //get list of real folders
+    //get list of real folders that will be used in the sidebar
     const filteredList = graphFiles.filter(item => item.folderName !== '.' && item.folderName !== 'Template');
     const uniqueNames = new Set(filteredList.map(item => item.folderName));
     setFolders(Array.from(uniqueNames).sort((a, b) => a.localeCompare(b)));
 
+    //create a list of booleans for toggling of folders
     const folderVisibilities = Array(uniqueNames.size + 1).fill(false);
     folderVisibilities[uniqueNames.size] = true;
     setFolderVisibility(folderVisibilities);
@@ -33,7 +34,6 @@ const Sidebar = ({ handleGraphSelect }) => {
     const updatedVisibility = [...folderVisibility];
     updatedVisibility[index] = !updatedVisibility[index];
     setFolderVisibility(updatedVisibility);
-    console.log(folderVisibility);
   };
 
   return(

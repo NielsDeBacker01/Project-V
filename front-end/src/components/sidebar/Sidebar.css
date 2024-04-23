@@ -86,3 +86,7 @@
 .hidden {
     display:none;
 }
+
+.folderLevel .icon {
+    aspect-ratio: 1;
+}
