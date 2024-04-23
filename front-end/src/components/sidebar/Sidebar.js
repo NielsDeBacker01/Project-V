@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SidebarButton from './sidebarbutton/SidebarButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ handleGraphSelect }) => {
   const [availableGraphs, setAvailableGraphs] = useState([]);
   const [folders, setFolders] = useState([]);
+  const [folderVisibility, setFolderVisibility] = useState([]);
 
   useEffect(() => {
     //gets all components in the graph folder for use in the sidebar
@@ -22,7 +23,18 @@ const Sidebar = ({ handleGraphSelect }) => {
     const filteredList = graphFiles.filter(item => item.folderName !== '.' && item.folderName !== 'Template');
     const uniqueNames = new Set(filteredList.map(item => item.folderName));
     setFolders(Array.from(uniqueNames).sort((a, b) => a.localeCompare(b)));
+
+    const folderVisibilities = Array(uniqueNames.size + 1).fill(false);
+    folderVisibilities[uniqueNames.size] = true;
+    setFolderVisibility(folderVisibilities);
   }, []);
+
+  const toggleFolderVisibility = (index) => {
+    const updatedVisibility = [...folderVisibility];
+    updatedVisibility[index] = !updatedVisibility[index];
+    setFolderVisibility(updatedVisibility);
+    console.log(folderVisibility);
+  };
 
   return(
     <div className="sidebar" data-testid="sidebar">
@@ -34,24 +46,24 @@ const Sidebar = ({ handleGraphSelect }) => {
           {/* Renders the graphs relative to their corresponding folder*/}
           {folders.map((folder, index) => (
             <div className="folder" key={index}>
-              <div className="folderLevel">
-                <FontAwesomeIcon icon={faCaretDown} className='icon'/>
+              <div className="folderLevel" onClick={() => toggleFolderVisibility(index)}>
+                <FontAwesomeIcon icon={folderVisibility[index] ? faCaretDown : faCaretRight} className='icon'/>
                 <p className="folderTitle" key={index}>{folder}:</p>
               </div>
-              {renderGraphsinFolder(folder)}
+              {renderGraphsinFolder(folder, index)}
             </div>
           ))}
           {/* Renders the remaining graphs that are not in a folder */}
-          {renderGraphsinFolder(".")}
+          {renderGraphsinFolder(".", folders.length)}
         </div>
       )}
 
     </div>
   );
 
-  function renderGraphsinFolder(folder) {
+  function renderGraphsinFolder(folder, index) {
     return (
-      <div className="folderContent" key={folder}>
+      <div className={`folderContent ${folderVisibility[index] ? '' : 'hidden'}`} key={index}>
         {availableGraphs.map((graph, index) => (
           graph.folderName === folder && (
             <SidebarButton key={index} handleGraphSelect={handleGraphSelect} label={graph.component.displayName} graph={graph.component}/> 
