@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import SidebarButton from './sidebarbutton/SidebarButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretRight, faAnglesLeft, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ handleGraphSelect }) => {
   const [availableGraphs, setAvailableGraphs] = useState([]);
   const [folders, setFolders] = useState([]);
   const [folderVisibility, setFolderVisibility] = useState([]);
+  const [sidebarVisibility, setSidebarVisibility] = useState(true);
 
   useEffect(() => {
     //gets all components in the graph folder for use in the sidebar
@@ -36,29 +37,42 @@ const Sidebar = ({ handleGraphSelect }) => {
     setFolderVisibility(updatedVisibility);
   };
 
+  const toggleSidebarVisibility = () => {
+    setSidebarVisibility(!sidebarVisibility);
+  };
+
   return(
-    <div className="sidebar" data-testid="sidebar">
-      <div className="head">
-      </div>
-
-      {availableGraphs && folders && (
-        <div className="body">
-          {/* Renders the graphs relative to their corresponding folder*/}
-          {folders.map((folder, index) => (
-            <div className="folder" key={index}>
-              <div className="folderLevel" onClick={() => toggleFolderVisibility(index)}>
-                <FontAwesomeIcon icon={folderVisibility[index] ? faCaretDown : faCaretRight} className='icon'/>
-                <p className="folderTitle" key={index}>{folder}:</p>
-              </div>
-              {renderGraphsinFolder(folder, index)}
-            </div>
-          ))}
-          {/* Renders the remaining graphs that are not in a folder */}
-          {renderGraphsinFolder(".", folders.length)}
+    sidebarVisibility ? (
+      <div className="sidebar" data-testid="sidebar">
+        <div className="head">
+          <div class="bar-toggle close" onClick={() => toggleSidebarVisibility()}>
+            <FontAwesomeIcon icon={faAnglesLeft} className='icon'/>
+          </div>
         </div>
-      )}
 
-    </div>
+        {availableGraphs && folders && (
+          <div className="body">
+            {/* Renders the graphs relative to their corresponding folder*/}
+            {folders.map((folder, index) => (
+              <div className="folder" key={index}>
+                <div className="folderLevel" onClick={() => toggleFolderVisibility(index)}>
+                  <FontAwesomeIcon icon={folderVisibility[index] ? faCaretDown : faCaretRight} className='icon'/>
+                  <p className="folderTitle" key={index}>{folder}:</p>
+                </div>
+                {renderGraphsinFolder(folder, index)}
+              </div>
+            ))}
+            {/* Renders the remaining graphs that are not in a folder */}
+            {renderGraphsinFolder(".", folders.length)}
+          </div>
+        )}
+
+      </div>
+    ) : (
+      <div class="bar-toggle open" onClick={() => toggleSidebarVisibility()}>
+        <FontAwesomeIcon icon={faAnglesRight} className='icon'/>
+      </div>
+    )
   );
 
   function renderGraphsinFolder(folder, index) {

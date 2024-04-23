@@ -6,6 +6,7 @@
     background-color: #201F57;
 }
 
+/*header styling*/
 .head {
     padding: 0.5rem;
     height: 10%;
@@ -13,7 +14,39 @@
     border-bottom: white 0.15rem solid;
     margin: 0.25rem 0.25rem;
 }
-  
+
+.close {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items:center;
+}
+
+.open {
+    position: absolute;
+    height: 10vh;
+    width: 10vw;
+    display: flex;
+    justify-content: flex-end;
+    align-items:center;
+    background-color: #201F57;
+    
+    top: 2.5rem;
+    padding: 0.5rem;
+    height: 10%;
+    border: white 0.15rem solid;
+    border-left: 0rem;
+    margin: 0.25rem 0.25rem;
+}
+
+.bar-toggle .icon {
+    color: white;
+    height: 1rem;
+    aspect-ratio: 1;
+}
+
+/*body styling*/
 .body {
     display: flex;
     height: 90%;
@@ -58,6 +91,10 @@
     border-radius: 0.25rem;
 }
 
+.folderLevel .icon {
+    aspect-ratio: 1;
+}
+
 .folderLevel:hover {
     background-color: #181745;
 }
@@ -85,8 +122,4 @@
 
 .hidden {
     display:none;
-}
-
-.folderLevel .icon {
-    aspect-ratio: 1;
 }
