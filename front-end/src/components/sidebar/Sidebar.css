@@ -12,7 +12,7 @@
     height: 10%;
     height-min: 10rem;
     border-bottom: white 0.15rem solid;
-    margin: 0.25rem 0.25rem;
+    margin: 0.25rem;
 }
 
 .close {
@@ -45,6 +45,14 @@
     color: white;
     height: 75%;
     aspect-ratio: 1;
+}
+
+.bar-toggle:hover .icon{
+    color: lightgray;
+}
+
+.bar-toggle:active .icon{
+    color: darkgray;
 }
 
 /*body styling*/
