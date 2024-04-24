@@ -41,6 +41,12 @@ const Sidebar = ({ handleGraphSelect }) => {
     setSidebarVisibility(!sidebarVisibility);
   };
 
+  const handleGraphSelectSidebar = (graphComponent, label) => {
+    handleGraphSelect(graphComponent);
+    console.log(label);
+    //update selected state
+  }
+
   return(
     sidebarVisibility ? (
       <div className="sidebar" data-testid="sidebar">
@@ -80,7 +86,7 @@ const Sidebar = ({ handleGraphSelect }) => {
       <div className={`folderContent ${folderVisibility[index] ? '' : 'hidden'}`} key={index}>
         {availableGraphs.map((graph, index) => (
           graph.folderName === folder && (
-            <SidebarButton key={index} handleGraphSelect={handleGraphSelect} label={graph.component.displayName} graph={graph.component}/> 
+            <SidebarButton key={index} handleGraphSelect={handleGraphSelectSidebar} label={graph.component.displayName} graph={graph.component}/> 
           )
         ))}
       </div>
