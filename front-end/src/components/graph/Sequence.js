@@ -8,7 +8,7 @@ const NearPoint = () => {
   useEffect(() => {
     (async () => {
       try {
-        const data = await EventService.getValorantAbilityEventsFollowedByKillEventsBySerieId("2616320");
+        const data = await EventService.getValorantAbilityEventsFollowedByKillEventsBySerieId(["2616320","2628069"]);
         console.log(data);
         setEventData(data);
       } catch (error) {
@@ -18,7 +18,7 @@ const NearPoint = () => {
   }, []);
 
   const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(600, 400).parent(canvasParentRef);
+    p5.createCanvas(1000, 600).parent(canvasParentRef);
     p5.fill(255,255,255);
     p5.textSize(12);
   };
@@ -29,8 +29,8 @@ const NearPoint = () => {
     p5.background(123, 38, 36);
     if (eventData) {
       eventData.forEach((event, index) => {
-        const x = 25 + (200 * Math.floor(index / 15));
-        const y = 30 + (25 * (index % 15));
+        const x = 25 + (200 * Math.floor(index / 23));
+        const y = 30 + (25 * (index % 23));
         if(event.events[0].action === "killed")
         {
           p5.text(event.events[0].actor.state.name + ", killed: " + event.events[0].target.state.name, x, y);

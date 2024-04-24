@@ -19,21 +19,25 @@ export class EventService {
   //get events json with default filters and external filters
   async getFilteredEventsBySerieId(series_id: string | string[], filter: eventSelectionCriteria): Promise<any> {
     try{
-      let json;
+      let json = [];
       if(Array.isArray(series_id))
       {
-        json = await this.getRawJsonBySerieId(series_id[0])
+        for (const id of series_id) {
+          const result = await this.getRawJsonBySerieId(id);
+          const filteredResult = this.filterJson(result, filter);
+          json = json.concat(filteredResult);
+        }
+        return json;
       }
       else if(typeof series_id === 'string')
       {
         json = await this.getRawJsonBySerieId(series_id);
+        return this.filterJson(json, filter);
       }
       else
       {
         throw new BadRequestException(`Invalid parameter type for series_id: ${typeof series_id}. Expected string or string array.`);
       }
-
-      return this.filterJson(json, filter);
     } catch (error) {
       console.error(`Error in getFilteredEventsBySerieId for series_id ${series_id}: ${error}`);
       throw error;
