@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
 import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
 import { HttpService } from '@nestjs/axios';
@@ -11,16 +11,33 @@ export class EventService {
   constructor(private httpService: HttpService) {}
 
   //get transaction json with default filters and no external filters
-  async getDefaultEventsBySerieId(series_id: string, gameTitle: GameTitle): Promise<any> {
+  async getDefaultEventsBySerieId(series_id: string | string[], gameTitle: GameTitle): Promise<any> {
     const defaultCriteria: eventSelectionCriteria = new eventSelectionCriteria(gameTitle);
-    const json = await this.getRawJsonBySerieId(series_id);
-    return this.filterJson(json, defaultCriteria);
+    return this.getFilteredEventsBySerieId(series_id, defaultCriteria);
   }
 
   //get events json with default filters and external filters
-  async getFilteredEventsBySerieId(series_id: string, filter: eventSelectionCriteria): Promise<any> {
-    const json = await this.getRawJsonBySerieId(series_id);
-    return this.filterJson(json, filter);
+  async getFilteredEventsBySerieId(series_id: string | string[], filter: eventSelectionCriteria): Promise<any> {
+    try{
+      let json;
+      if(Array.isArray(series_id))
+      {
+        json = await this.getRawJsonBySerieId(series_id[0])
+      }
+      else if(typeof series_id === 'string')
+      {
+        json = await this.getRawJsonBySerieId(series_id);
+      }
+      else
+      {
+        throw new BadRequestException(`Invalid parameter type for series_id: ${typeof series_id}. Expected string or string array.`);
+      }
+
+      return this.filterJson(json, filter);
+    } catch (error) {
+      console.error(`Error in getFilteredEventsBySerieId for series_id ${series_id}: ${error}`);
+      throw error;
+    }
   }
 
   //get the full json event file by id

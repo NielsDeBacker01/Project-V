@@ -45,7 +45,7 @@ const Sidebar = ({ handleGraphSelect }) => {
     sidebarVisibility ? (
       <div className="sidebar" data-testid="sidebar">
         <div className="head">
-          <div class="bar-toggle close" onClick={() => toggleSidebarVisibility()}>
+          <div className="bar-toggle close" onClick={() => toggleSidebarVisibility()}>
             <FontAwesomeIcon icon={faAnglesLeft} className='icon'/>
           </div>
         </div>
@@ -69,7 +69,7 @@ const Sidebar = ({ handleGraphSelect }) => {
 
       </div>
     ) : (
-      <div class="bar-toggle open" onClick={() => toggleSidebarVisibility()}>
+      <div className="bar-toggle open" onClick={() => toggleSidebarVisibility()}>
         <FontAwesomeIcon icon={faAnglesRight} className='icon'/>
       </div>
     )
