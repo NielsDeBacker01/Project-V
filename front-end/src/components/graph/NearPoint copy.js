@@ -1,6 +1,7 @@
 import Sketch from 'react-p5';
 import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
+import Spinner from '@components/spinner/Spinner';
 
 const NearPoint = () => {
   const [eventData, setEventData] = useState(null);
@@ -25,7 +26,6 @@ const NearPoint = () => {
   };
 
   const draw = p5 => {
-    
     p5.clear();
     p5.background(23, 138, 136);
     if (eventData) {
@@ -35,7 +35,15 @@ const NearPoint = () => {
     }
   };
 
-  return <Sketch setup={setup} draw={draw} />;
+  return (
+    eventData ? (
+      <Sketch setup={setup} draw={draw} />
+    ) : (
+      <div className='react-p5'>
+        <Spinner/>
+      </div>
+    )
+   );
 };
 
 NearPoint.displayName = 'Log of events near coordinate [2000, -5000]';

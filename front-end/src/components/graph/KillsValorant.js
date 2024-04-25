@@ -1,6 +1,7 @@
 import Sketch from 'react-p5';
 import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
+import Spinner from '@components/spinner/Spinner';
 
 const Kills = () => {
   const [filteredData, setFilteredData] = useState(null);
@@ -84,7 +85,15 @@ const Kills = () => {
     }
   };
 
-  return <Sketch setup={setup} draw={draw} />;
+  return (
+    filteredData ? (
+      <Sketch setup={setup} draw={draw} />
+    ) : (
+      <div className='react-p5'>
+        <Spinner/>
+      </div>
+    )
+   );
 };
 
 Kills.displayName = 'Kills (Valorant)';

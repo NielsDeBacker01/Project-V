@@ -1,6 +1,7 @@
 import Sketch from 'react-p5';
 import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
+import Spinner from '@components/spinner/Spinner';
 
 const NearPoint = () => {
   const [eventData, setEventData] = useState(null);
@@ -44,7 +45,15 @@ const NearPoint = () => {
     }
   };
 
-  return <Sketch setup={setup} draw={draw} />;
+  return (
+    eventData ? (
+      <Sketch setup={setup} draw={draw} />
+    ) : (
+      <div className='react-p5'>
+        <Spinner/>
+      </div>
+    )
+   );
 };
 
 NearPoint.displayName = 'Abilities causing kills';

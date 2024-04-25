@@ -1,6 +1,7 @@
 import Sketch from 'react-p5';
 import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
+import Spinner from '@components/spinner/Spinner';
 
 const Graph = () => {
   //default variable to store data in
@@ -44,7 +45,16 @@ const Graph = () => {
     }
   };
 
-  return <Sketch setup={setup} draw={draw} />;
+  //displays a loading animation while data is loading
+  return (
+    data ? (
+      <Sketch setup={setup} draw={draw} />
+    ) : (
+      <div className='react-p5'>
+        <Spinner/>
+      </div>
+    )
+  );
 };
 
 //provides a display name that will automatically be used in the sidebar
