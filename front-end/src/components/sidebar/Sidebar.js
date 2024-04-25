@@ -10,6 +10,7 @@ const Sidebar = ({ handleGraphSelect }) => {
   const [folders, setFolders] = useState([]);
   const [folderVisibility, setFolderVisibility] = useState([]);
   const [sidebarVisibility, setSidebarVisibility] = useState(true);
+  const [selectedGraph, setSelectedGraph] = useState();
 
   useEffect(() => {
     //gets all components in the graph folder for use in the sidebar
@@ -31,6 +32,16 @@ const Sidebar = ({ handleGraphSelect }) => {
     setFolderVisibility(folderVisibilities);
   }, []);
 
+  useEffect(() => {
+    // Apply style to a selected graph
+    if(selectedGraph){
+      const newElement = document.getElementById(selectedGraph);
+      if (newElement) {
+        newElement.style.borderColor = 'white';
+      }
+    }
+  }, [selectedGraph]);
+
   const toggleFolderVisibility = (index) => {
     const updatedVisibility = [...folderVisibility];
     updatedVisibility[index] = !updatedVisibility[index];
@@ -43,8 +54,16 @@ const Sidebar = ({ handleGraphSelect }) => {
 
   const handleGraphSelectSidebar = (graphComponent, label) => {
     handleGraphSelect(graphComponent);
-    console.log(label);
-    //update selected state
+
+    //remove style from old selected graph before updating
+    if(selectedGraph)
+    {
+      const oldElement = document.getElementById(selectedGraph);
+      if (oldElement) {
+        oldElement.style.borderColor = '';
+      }  
+    }
+    setSelectedGraph(label);
   }
 
   return(
