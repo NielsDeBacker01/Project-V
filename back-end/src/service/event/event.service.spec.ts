@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { EventService } from './event.service';
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
+import { GameTitle, eventSelectionCriteria } from './eventsSelectionCriteria';
 import { AndFilter, Filter, FilterActorPlayerEvents, FilterNone, FilterTargetPlayerEvents } from './filter';
 import { HttpService } from '@nestjs/axios';
 

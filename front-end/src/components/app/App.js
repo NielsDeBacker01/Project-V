@@ -1,7 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
 import Sidebar from '../sidebar/Sidebar';
-import Spinner from '../spinner/Spinner';
 
 class App extends Component {
 

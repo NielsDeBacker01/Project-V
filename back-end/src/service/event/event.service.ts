@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import { GameTitle, eventSelectionCriteria } from './eventsFilterCriteria';
+import { GameTitle, eventSelectionCriteria } from './eventsSelectionCriteria';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as AdmZip from 'adm-zip';

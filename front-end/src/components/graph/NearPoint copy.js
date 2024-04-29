@@ -1,5 +1,6 @@
 import Sketch from 'react-p5';
 import EventService from '@services/EventService';
+import SerieIdService from '@services/SerieIdService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
@@ -9,6 +10,7 @@ const NearPoint = () => {
   useEffect(() => {
     (async () => {
       try {
+        console.log(SerieIdService.getRecentMatchesForTeam("Cloud9"));
         const data = await EventService.getValorantEventsNearPointBySerieId("2616320");
         console.log(data);
         setEventData(data);

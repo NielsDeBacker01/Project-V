@@ -8,8 +8,8 @@ export class eventSelectionCriteria {
    criteriaFilterer: Filter;
    seriesStateAndDeltaExceptions: string[]
    
-    //provides default values that are usually what is needed
-    constructor(game: GameTitle, filter: Filter = new FilterNone()) {
+   //provides default values that are usually what is needed
+   constructor(game: GameTitle, filter: Filter = new FilterNone()) {
       //filters with fields that might be game specific
       switch (game) {
          case GameTitle.VALORANT:
@@ -40,7 +40,7 @@ export class eventSelectionCriteria {
          "id", "includesFullState", "seriesStateDelta", "seriesState"];
       this.criteriaFilterer = filter;
       this.seriesStateAndDeltaExceptions = [];
-    }
+   }
 
    //Available filter sets for use in bannedEventTypes
    //for now these only take in to account the events from Valorant games
