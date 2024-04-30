@@ -6,7 +6,7 @@ import * as path from 'path';
 declare const module: any;
 
 async function bootstrap() {
-  dotenv.config({ path: path.resolve(__dirname, '../../front-end/.env') });
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
   const app = await NestFactory.create(AppModule);
   await app.listen(3200);

@@ -1,0 +1,95 @@
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import * as AdmZip from 'adm-zip';
+import { GraphQLClient } from 'graphql-request';
+
+@Injectable()
+export class SerieService {
+    constructor(private httpService: HttpService) {}
+
+    private baseURL = 'https://api.grid.gg/central-data/graphql';
+    private graphQlClient = new GraphQLClient(
+        this.baseURL, {
+        headers: {
+            "x-api-key": process.env.API_KEY,
+        },
+    });
+
+    // Send the request
+    async callGraphQLQuery( query, variables = {}) {
+        try {
+            const data = await this.graphQlClient.request(query, variables);
+            return data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    //get all series ids for a team name
+    async getSerieIdsByTeamName(team_name: string): Promise<any> {
+        try {
+            if(team_name === undefined)
+            {
+                throw new BadRequestException(`Invalid parameter for team_name: ${team_name}. Expected string or string array.`);
+            }
+            //gets id for a team name
+            const teamsIds = (await this.callGraphQLQuery(this.teamIdsForTeamNameQuery, {teamName: team_name})).teams.edges.map((t) => t.node);
+
+            //gets series ids for a team id
+            const seriesIds = (await this.callGraphQLQuery(this.seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id)})).allSeries.edges.map((t) => t.node.id);
+
+            return seriesIds;
+        } catch (error) {
+            console.error(`Error getting GRID series data from 'https://api.grid.gg/central-data/graphql': ${error}`);
+            throw new NotFoundException(`Series ids for team not found.`);
+        }
+    }
+
+    teamIdsForTeamNameQuery = `
+    query GetTeams($teamName: String!) {
+        teams(filter: { name: { contains: $teamName } }) {
+        totalCount
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+            id
+            name
+            }
+        }
+        }
+    }`;
+
+    seriesIdsForTeamsIdQuery = `
+    query GetAllSeriesInNext24Hours($teamIds: [ID!]) {
+        allSeries(
+        filter:{
+            teamIds: {
+            in: $teamIds
+            }
+        }
+        orderBy: StartTimeScheduled
+        ) {
+        totalCount,
+        pageInfo{
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+        }
+        edges{
+            cursor
+            node{
+            id
+            startTimeScheduled
+            }
+        }
+        }
+    }`
+}

@@ -10,7 +10,7 @@ const NearPoint = () => {
   useEffect(() => {
     (async () => {
       try {
-        SerieIdService.getRecentMatchIdsForTeam("Cloud9");
+        console.log(await SerieIdService.getRecentMatchIdsForTeam("Cloud9"));
         const data = await EventService.getValorantEventsNearPointBySerieId("2616320");
         console.log(data);
         setEventData(data);

@@ -1,86 +1,32 @@
-import { GraphQLClient } from 'graphql-request';
+import axios from 'axios';
 
-const baseURL = 'https://api.grid.gg/central-data/graphql';
+const baseURL = 'http://localhost:3200/serie';
 
-const SerieIdService = new GraphQLClient(
-  baseURL, {
+const SerieIdService = axios.create({
+  baseURL,
   headers: {
-    "x-api-key": process.env.REACT_APP_API_KEY,
+    'Content-Type': 'application/json',
   },
 });
 
-const fetchData = async (query, variables = {}) => {
+const fetchData = async (path, teamName) => {
   try {
     console.time('BackendCall Series');
-    const data = await SerieIdService.request(query, variables);
+    const response = await SerieIdService.get(path, {
+      params: {
+        team_name: teamName,
+      },
+    });
     console.timeEnd('BackendCall Series');
-    return data;
+    return response.data;
   } catch (error) {
-    //double check
-    console.error(`Error fetching series data:`, error);
-    return error;
+    console.error(`Error fetching event data from ${path} by series_id:`, error);
+    throw error;
   }
 };
 
-SerieIdService.getRecentMatchIdsForTeam = async (team) => {
-  //gets id for a team name
-  const teamsIds = (await fetchData(teamIdsForTeamNameQuery, {teamName: team})).teams.edges.map((t) => t.node);
-  console.log(teamsIds);
-
-  //gets series ids for a team id
-  const seriesData = await fetchData(seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id)});
-  const seriesIds = seriesData.allSeries.edges.map((t) => t.node.id);
-  console.log(seriesIds);
+SerieIdService.getRecentMatchIdsForTeam = async (teamName) => {
+  return fetchData('/series-ids', teamName);
 };
-  
   
 export default SerieIdService;
-
-//ALL CODE BEYOND THIS POINT IS BY GRID
-const teamIdsForTeamNameQuery = `
-query GetTeams($teamName: String!) {
-  teams(filter: { name: { contains: $teamName } }) {
-    totalCount
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    edges {
-      cursor
-      node {
-        id
-        name
-      }
-    }
-  }
-}`;
-
-const seriesIdsForTeamsIdQuery = `
-  query GetAllSeriesInNext24Hours($teamIds: [ID!]) {
-    allSeries(
-      filter:{
-        teamIds: {
-          in: $teamIds
-        }
-      }
-      orderBy: StartTimeScheduled
-    ) {
-      totalCount,
-      pageInfo{
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-      edges{
-        cursor
-        node{
-          id
-          startTimeScheduled
-        }
-      }
-    }
-  }
-`;
