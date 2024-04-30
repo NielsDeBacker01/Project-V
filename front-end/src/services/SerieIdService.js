@@ -23,7 +23,6 @@ const fetchData = async (query, variables = {}) => {
 };
 
 SerieIdService.getRecentMatchIdsForTeam = async (team) => {
-  //skip this step somehow?
   //gets id for a team name
   const teamsIds = (await fetchData(teamIdsForTeamNameQuery, {teamName: team})).teams.edges.map((t) => t.node);
   console.log(teamsIds);
@@ -37,7 +36,6 @@ SerieIdService.getRecentMatchIdsForTeam = async (team) => {
   
 export default SerieIdService;
 
-//filter for validity of match?
 //ALL CODE BEYOND THIS POINT IS BY GRID
 const teamIdsForTeamNameQuery = `
 query GetTeams($teamName: String!) {

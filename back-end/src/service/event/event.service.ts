@@ -80,7 +80,7 @@ export class EventService {
     try {
       const headers = {
         'Accept':'application/zip',
-        'x-api-key':process.env.API_KEY
+        'x-api-key':process.env.REACT_APP_API_KEY
       };
 
       //call the GRID API
