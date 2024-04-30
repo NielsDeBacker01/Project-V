@@ -5,15 +5,15 @@ const baseURL = 'https://api.grid.gg/central-data/graphql';
 const SerieIdService = new GraphQLClient(
   baseURL, {
   headers: {
-    "x-api-key": API_KEY,
+    "x-api-key": process.env.REACT_APP_API_KEY,
   },
 });
 
 const fetchData = async (query, variables = {}) => {
   try {
-    console.time('BackendCall');
+    console.time('BackendCall Series');
     const data = await SerieIdService.request(query, variables);
-    console.timeEnd('BackendCall');
+    console.timeEnd('BackendCall Series');
     return data;
   } catch (error) {
     //double check
@@ -22,22 +22,24 @@ const fetchData = async (query, variables = {}) => {
   }
 };
 
-SerieIdService.getRecentMatchesForTeam = async (team) => {
-  //?
-  const teamsData = await fetchData(teamQuery, {teamName: team}).teams.edges.map((t) => t.node);
-  console.log(teamsData);
+SerieIdService.getRecentMatchIdsForTeam = async (team) => {
+  //skip this step somehow?
+  //gets id for a team name
+  const teamsIds = (await fetchData(teamIdsForTeamNameQuery, {teamName: team})).teams.edges.map((t) => t.node);
+  console.log(teamsIds);
 
-  //?
-  const results = await fetchData(seriesQuery, {teamIds: teamsData.map(d => d.id)});
-  console.log(results);
+  //gets series ids for a team id
+  const seriesData = await fetchData(seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id)});
+  const seriesIds = seriesData.allSeries.edges.map((t) => t.node.id);
+  console.log(seriesIds);
 };
   
   
 export default SerieIdService;
 
-
+//filter for validity of match?
 //ALL CODE BEYOND THIS POINT IS BY GRID
-const teamQuery = `
+const teamIdsForTeamNameQuery = `
 query GetTeams($teamName: String!) {
   teams(filter: { name: { contains: $teamName } }) {
     totalCount
@@ -47,7 +49,6 @@ query GetTeams($teamName: String!) {
       startCursor
       endCursor
     }
-    totalCount
     edges {
       cursor
       node {
@@ -57,14 +58,11 @@ query GetTeams($teamName: String!) {
     }
   }
 }`;
-const seriesQuery = `
-  query GetAllSeriesInNext24Hours($gte: String!, $lte: String!, $teamIds: [ID!]) {
+
+const seriesIdsForTeamsIdQuery = `
+  query GetAllSeriesInNext24Hours($teamIds: [ID!]) {
     allSeries(
       filter:{
-        startTimeScheduled:{
-          gte: $gte
-          lte: $lte
-        }
         teamIds: {
           in: $teamIds
         }
@@ -82,23 +80,7 @@ const seriesQuery = `
         cursor
         node{
           id
-          title {
-            nameShortened
-          }
-          tournament {
-            nameShortened
-          }
           startTimeScheduled
-          format {
-            name
-            nameShortened
-          }
-          teams {
-            baseInfo {
-              id
-              name
-            }
-          }
         }
       }
     }

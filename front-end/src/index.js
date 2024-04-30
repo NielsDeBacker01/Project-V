@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/app/App';
 import reportWebVitals from './reportWebVitals';
-import dotenv from 'dotenv';
-import path from 'path';
-
-const envPath = path.resolve(__dirname, '../../.env');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
