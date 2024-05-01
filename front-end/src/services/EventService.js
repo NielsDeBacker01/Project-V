@@ -33,6 +33,10 @@ EventService.getValorantKillsEventsBySerieId = async (serieId) => {
   return fetchData('/valorant/kills', serieId);
 };
 
+EventService.getValorantAbilitiesEventsBySerieId = async (serieId) => {
+  return fetchData('/valorant/abilities', serieId);
+};
+
 EventService.getValorantEventsNearPointBySerieId = async (serieId) => {
   return fetchData('/valorant/near-test', serieId);
 };

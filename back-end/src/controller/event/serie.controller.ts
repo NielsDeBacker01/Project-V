@@ -8,4 +8,9 @@ export class SerieController {
   getSerieIdsByTeamName(@Query('team_name') teamName: string): Promise<any> {
     return this.serieService.getSerieIdsByTeamName(teamName);
   }
+
+  @Get('team-id')
+  getTeamIdByTeamName(@Query('team_name') teamName: string): Promise<any> {
+    return this.serieService.getTeamIdByTeamName(teamName);
+  }
 }

@@ -19,7 +19,13 @@ export class EventController {
   @Get(':game/kills')
   getValorantKillsEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterKillEvents);
-    filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"]
+    filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"];
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
+  }
+
+  @Get(':game/abilities')
+  getValorantAbilitiesEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+    const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterAbilityEvents);
     return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
   

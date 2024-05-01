@@ -28,5 +28,9 @@ const fetchData = async (path, teamName) => {
 SerieIdService.getRecentMatchIdsForTeam = async (teamName) => {
   return fetchData('/series-ids', teamName);
 };
+
+SerieIdService.getTeamIdForTeam = async (teamName) => {
+  return fetchData('/team-id', teamName);
+};
   
 export default SerieIdService;
