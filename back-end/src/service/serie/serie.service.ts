@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { GraphQLClient } from 'graphql-request';
 
 @Injectable()
 export class SerieService {
-    constructor(private httpService: HttpService) {}
+    constructor() {}
 
     private baseURL = 'https://api.grid.gg/central-data/graphql';
     private graphQlClient = new GraphQLClient(

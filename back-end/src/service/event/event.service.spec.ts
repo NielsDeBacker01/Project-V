@@ -5,7 +5,6 @@ import { GameTitle, eventSelectionCriteria } from './eventsSelectionCriteria';
 import { AndFilter, Filter, FilterActorPlayerEvents, FilterNone, FilterTargetPlayerEvents } from './filter';
 import { HttpService } from '@nestjs/axios';
 
-//ASYNC ISSUE NEEDS TO BE FIXED -> empty results because promises instead of expected
 describe('EventService', () => {
   let service: EventService;
   let serie_id: string;
