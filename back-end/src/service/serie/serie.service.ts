@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
-import * as AdmZip from 'adm-zip';
 import { GraphQLClient } from 'graphql-request';
 
 @Injectable()
@@ -59,7 +57,7 @@ export class SerieService {
     }
 
     teamIdsForTeamNameQuery = `
-    query GetTeams($teamName: String!) {
+    query teamIdsForTeamNameQuery($teamName: String!) {
         teams(filter: { name: { contains: $teamName } }) {
         totalCount
         pageInfo {
@@ -79,11 +77,11 @@ export class SerieService {
     }`;
 
     seriesIdsForTeamsIdQuery = `
-    query GetAllSeriesInNext24Hours($teamIds: [ID!]) {
+    query seriesIdsForTeamsIdQuery($teamIds: [ID!]) {
         allSeries(
         filter:{
             teamIds: {
-            in: $teamIds
+                in: $teamIds
             }
         }
         orderBy: StartTimeScheduled

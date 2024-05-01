@@ -83,20 +83,33 @@ export class EventService {
         'x-api-key':process.env.API_KEY
       };
 
-      //call the GRID API
-      let jsonlData: string = "";
-      const response = await firstValueFrom(this.httpService.get(`https://api.grid.gg/file-download/events/grid/series/${series_id}`, { responseType: 'arraybuffer', headers: headers,  }));
+      const availabilityResponse = await firstValueFrom(this.httpService.get(`https://api.grid.gg/file-download/list/${series_id}`, {headers: headers}));
       
-      //unzip and find the jsonl file
-      const zip = new AdmZip(response.data);
-      const zipEntries = zip.getEntries();
-      zipEntries.forEach(entry => {
-        if (entry.entryName.endsWith('.jsonl')) {
-          jsonlData = zip.readAsText(entry);
-        }
-      });
+      if(availabilityResponse.data)
+      {
+        const eventsStatus = availabilityResponse.data.files.find(file => file.id === 'events-grid')
+        if (eventsStatus && eventsStatus.status === 'ready') 
+        {
+          console.log(`file available for ${series_id} will be loaded from GRID api`);
+          //call the GRID API
+          let jsonlData: string = "";
+          const response = await firstValueFrom(this.httpService.get(`https://api.grid.gg/file-download/events/grid/series/${series_id}`, { responseType: 'arraybuffer', headers: headers,  }));
+          
+          //unzip and find the jsonl file
+          const zip = new AdmZip(response.data);
+          const zipEntries = zip.getEntries();
+          zipEntries.forEach(entry => {
+            if (entry.entryName.endsWith('.jsonl')) {
+              jsonlData = zip.readAsText(entry);
+            }
+          });
 
-      return jsonlData;
+          return jsonlData;
+        } else {
+          return "";
+        }
+      }
+
     } catch (error) {
       console.error(`Error getting GRID series data from https://api.grid.gg/file-download/events/grid/series/${series_id}: ${error}`);
       throw new NotFoundException(`Event data for series_id ${series_id} not found.`);
