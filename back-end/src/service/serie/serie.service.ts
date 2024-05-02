@@ -46,7 +46,7 @@ export class SerieService {
             const teamsIds = await this.getTeamIdByTeamName(team_name);
 
             //gets series ids for a team id
-            const seriesIds = (await this.callGraphQLQuery(this.seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id)})).allSeries.edges.map((t) => t.node.id);
+            const seriesIds = (await this.callGraphQLQuery(this.seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id), after:""})).allSeries.edges.map((t) => t.node.id);
 
             return seriesIds;
         } catch (error) {
@@ -76,8 +76,10 @@ export class SerieService {
     }`;
 
     seriesIdsForTeamsIdQuery = `
-    query seriesIdsForTeamsIdQuery($teamIds: [ID!]) {
+    query seriesIdsForTeamsIdQuery($teamIds: [ID!], $after: Cursor!) {
         allSeries(
+        first: 50
+        after: $after
         filter:{
             teamIds: {
                 in: $teamIds
