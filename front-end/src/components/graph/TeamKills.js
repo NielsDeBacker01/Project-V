@@ -11,11 +11,12 @@ const NearPoint = () => {
   useEffect(() => {
     (async () => {
       try {
-        const teamId = (await SerieIdService.getTeamIdForTeam(teamName))[0].id;
+        const teamId = (await SerieIdService.getTeamIdForTeam(teamName)).find(team => team.name === teamName).id;
         console.log(teamId);
         const teamMatchIds = await SerieIdService.getRecentMatchIdsForTeam(teamName);
         console.log(teamMatchIds);
         const data = await EventService.getValorantKillsEventsBySerieId(teamMatchIds);
+        console.log(data);
         const result = filterEventData(data, teamId);
         console.log(result);
         setEventData(result);
@@ -65,7 +66,7 @@ const NearPoint = () => {
     
     p5.clear();
     p5.background(255,255,255);
-    if (eventData) {
+    if (eventData && eventData.length > 0) {
       const highestKills = eventData.reduce((maxPlayer, currentPlayer) => {
         return (currentPlayer.kills > maxPlayer.kills) ? currentPlayer : maxPlayer;
       }).kills;

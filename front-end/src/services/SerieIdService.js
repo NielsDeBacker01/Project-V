@@ -29,6 +29,7 @@ SerieIdService.getRecentMatchIdsForTeam = async (teamName) => {
   return fetchData('/series-ids', teamName);
 };
 
+//returns a list of all ids containing the teamName, because multiple can exist, filtering is required afterwards.
 SerieIdService.getTeamIdForTeam = async (teamName) => {
   return fetchData('/team-id', teamName);
 };
