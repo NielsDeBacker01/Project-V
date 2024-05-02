@@ -18,22 +18,29 @@ export class EventController {
 
   @Get(':game/kills')
   getKillsEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
-    const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterKillEvents);
-    filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"];
-    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
+    return this.eventService.getFilteredEventsBySerieId(series_id, 
+      new eventSelectionCriteria(this.stringToGameTitle(game), new FilterKillEvents)
+    );
   }
 
   @Get(':game/abilities')
   getAbilitiesEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
-    const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterAbilityEvents);
-    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
+    return this.eventService.getFilteredEventsBySerieId(series_id, 
+      new eventSelectionCriteria(this.stringToGameTitle(game), new FilterAbilityEvents)
+    );
   }
   
   @Get(':game/near-test')
   getEventsNearPointBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
-    return this.eventService.getFilteredEventsBySerieId(series_id,
-      new eventSelectionCriteria(this.stringToGameTitle(game), this.nearCertainPointFilter)
-    );
+    const filters = new eventSelectionCriteria(this.stringToGameTitle(game), this.nearCertainPointFilter);
+    filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"];
+    filters.bannedEventTypes = [
+      ...filters.eventTypefilterTemplates.defaultFilters,
+      ...filters.eventTypefilterTemplates.timeRelatedFilters,
+      ...filters.eventTypefilterTemplates.pregameRelatedFilter,
+      ...filters.eventTypefilterTemplates.gameStructureRelatedFilters
+    ];
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   @Get(':game/sequence-test')
