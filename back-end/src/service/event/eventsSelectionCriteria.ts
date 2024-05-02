@@ -32,6 +32,26 @@ export class eventSelectionCriteria {
                stopDefuseBomb: ["id","statePath","type"],
                explodeBomb: ["id","statePath","type"],
             }
+         case GameTitle.CS2:
+            this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
+            this.actorTargetFieldsToDelete = {
+               series: ["id","games","draftActions"],
+               game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
+               round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               clock: ["id", "type"],
+               freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
+               team: [],
+               player: [],
+               item: ["id","statePath"],
+               ability: ["id"],
+               plantBomb: ["id","statePath","type"],
+               defuseBomb: ["id","statePath","type"],
+               beginDefuseBomb: ["id","statePath","type"],
+               reachDefuseBombCheckpoint: ["id","statePath","type"],
+               stopDefuseBomb: ["id","statePath","type"],
+               explodeBomb: ["id","statePath","type"],
+            }
       }
       //default filters that are the same for each game title
       this.transactionFieldsToDelete = [
@@ -78,5 +98,6 @@ export class eventSelectionCriteria {
 }
 
 export enum GameTitle {
-   VALORANT = 'VALORANT'
+   VALORANT = 'VALORANT',
+   CS2 = 'CS2'
 }

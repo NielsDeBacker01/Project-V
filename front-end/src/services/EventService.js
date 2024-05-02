@@ -25,24 +25,24 @@ const fetchData = async (path, serieId) => {
   }
 };
 
-EventService.getValorantDefaultEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant', serieId);
+EventService.getGameDefaultEventsBySerieId = async (gameTitle, serieId) => {
+  return fetchData(`/${gameTitle}`, serieId);
 };
 
-EventService.getValorantKillsEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/kills', serieId);
+EventService.getGameKillsEventsBySerieId = async (gameTitle, serieId) => {
+  return fetchData(`/${gameTitle}/kills`, serieId);
 };
 
-EventService.getValorantAbilitiesEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/abilities', serieId);
+EventService.getGameAbilitiesEventsBySerieId = async (gameTitle, serieId) => {
+  return fetchData(`/${gameTitle}/abilities`, serieId);
 };
 
-EventService.getValorantEventsNearPointBySerieId = async (serieId) => {
-  return fetchData('/valorant/near-test', serieId);
+EventService.getGameEventsNearPointBySerieId = async (gameTitle, serieId) => {
+  return fetchData(`/${gameTitle}/near-test`, serieId);
 };
 
-EventService.getValorantAbilityEventsFollowedByKillEventsBySerieId = async (serieId) => {
-  return fetchData('/valorant/sequence-test', serieId);
+EventService.getGameAbilityEventsFollowedByKillEventsBySerieId = async (gameTitle, serieId) => {
+  return fetchData(`/${gameTitle}/sequence-test`, serieId);
 };
 
 export default EventService;

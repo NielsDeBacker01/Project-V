@@ -9,7 +9,7 @@ const NearPoint = () => {
   useEffect(() => {
     (async () => {
       try {
-        const data = await EventService.getValorantAbilityEventsFollowedByKillEventsBySerieId(["2616320","2628069"]);
+        const data = await EventService.getGameAbilityEventsFollowedByKillEventsBySerieId("valorant",["2616320","2628069"]);
         console.log(data);
         setEventData(data);
       } catch (error) {

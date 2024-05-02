@@ -12,32 +12,32 @@ export class EventController {
   AbilityKillSequenceFilter: Filter = new SequenceFilter(new FilterAbilityEvents, new FilterKillEvents, 0, 0.5)
 
   @Get(':game')
-  getValorantDefaultEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+  getDefaultEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     return this.eventService.getDefaultEventsBySerieId(series_id, this.stringToGameTitle(game));
   }
 
   @Get(':game/kills')
-  getValorantKillsEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+  getKillsEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterKillEvents);
     filters.seriesStateAndDeltaExceptions = ["currentSeconds", "position"];
     return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
 
   @Get(':game/abilities')
-  getValorantAbilitiesEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+  getAbilitiesEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     const filters = new eventSelectionCriteria(this.stringToGameTitle(game), new FilterAbilityEvents);
     return this.eventService.getFilteredEventsBySerieId(series_id, filters);
   }
   
   @Get(':game/near-test')
-  getValorantEventsNearPointBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+  getEventsNearPointBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     return this.eventService.getFilteredEventsBySerieId(series_id,
       new eventSelectionCriteria(this.stringToGameTitle(game), this.nearCertainPointFilter)
     );
   }
 
   @Get(':game/sequence-test')
-  getValorantAbilityEventsFollowedByKillEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
+  getAbilityEventsFollowedByKillEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     return this.eventService.getFilteredEventsBySerieId(series_id,
       new eventSelectionCriteria(this.stringToGameTitle(game), this.AbilityKillSequenceFilter)
     );
