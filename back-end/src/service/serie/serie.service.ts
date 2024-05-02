@@ -23,6 +23,27 @@ export class SerieService {
         }
     }
 
+    async callGraphQLQueryRecursively( query, variables, allNodes = [] ) {
+        // Call the callGraphQLQuery() function to make the initial request
+        const data = await this.callGraphQLQuery(query, variables);
+        // Merge the nodes from the current page with the previously collected nodes
+        const firstKey = Object.keys(data)[0]
+        const currentNodes = data[firstKey].edges.map((edge) => edge.node);
+        allNodes = [...allNodes, ...currentNodes];
+        
+        // Check if there are more pages of results
+        if (data[firstKey].pageInfo.hasNextPage) {
+            // Update the after variable with the value of the endCursor
+            variables.after = data[firstKey].pageInfo.endCursor;
+        
+            // Call the function recursively with the updated variables and nodes
+            return this.callGraphQLQueryRecursively(query, variables, allNodes);
+        } else {
+            // Return the final array of nodes if there are no more pages of results
+            return allNodes;
+        }
+    }
+
     async getTeamIdByTeamName(team_name: string): Promise<any> {
         try {
             if(team_name === undefined)
@@ -30,7 +51,7 @@ export class SerieService {
                 throw new BadRequestException(`Invalid parameter for team_name: ${team_name}. Expected string or string array.`);
             }
             //gets id for a team name
-            const teamsIds = (await this.callGraphQLQuery(this.teamIdsForTeamNameQuery, {teamName: team_name})).teams.edges.map((t) => t.node);
+            const teamsIds = await this.callGraphQLQueryRecursively(this.teamIdsForTeamNameQuery, {teamName: team_name});
 
             return teamsIds;
         } catch (error) {
@@ -46,7 +67,7 @@ export class SerieService {
             const teamsIds = await this.getTeamIdByTeamName(team_name);
 
             //gets series ids for a team id
-            const seriesIds = (await this.callGraphQLQuery(this.seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id), after:""})).allSeries.edges.map((t) => t.node.id);
+            const seriesIds = (await this.callGraphQLQueryRecursively(this.seriesIdsForTeamsIdQuery, {teamIds: teamsIds.map(d => d.id), after:""})).map(t => t.id);
 
             return seriesIds;
         } catch (error) {

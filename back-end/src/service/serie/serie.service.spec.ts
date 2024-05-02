@@ -22,7 +22,7 @@ describe('SerieService', () => {
     it('getTeamIdByTeamName should return an id for a team name', async () => {
       // Arrange
       const expected = [{ id: 123}];
-      jest.spyOn(service, 'callGraphQLQuery').mockReturnValue(Promise.resolve({teams: {edges: [{node: { id: 123}}]}}));
+      jest.spyOn(service, 'callGraphQLQuery').mockReturnValue(Promise.resolve({teams: {edges: [{node: { id: 123}}], pageInfo: {hasNextPage: false, endCursor: 1,}}}));
       
       // Act
       const result = await service.getTeamIdByTeamName(team);
@@ -34,7 +34,7 @@ describe('SerieService', () => {
       // Arrange
       //prevent error logs
       jest.spyOn(console, 'error').mockImplementation(() => {});
-      jest.spyOn(service, 'callGraphQLQuery').mockImplementation(() => {
+      jest.spyOn(service, 'callGraphQLQueryRecursively').mockImplementation(() => {
         throw new Error('File not found');
       });
       
