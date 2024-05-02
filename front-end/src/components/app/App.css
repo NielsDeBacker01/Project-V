@@ -22,7 +22,17 @@
 
 .content {
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
+  scrollbar-color: white #1f2021;
+}
+
+//apply for safari browsers
+.content::-webkit-scrollbar-track {
+  background-color: #1f2021;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: white;
 }
 
 *{

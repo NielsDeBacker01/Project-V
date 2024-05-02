@@ -6,7 +6,6 @@ const Graph3 = () => {
   let numPts = 100;
 
   const setup = (p5, canvasParentRef) => {
-    //this is slightly too wide causing it to go off screen
     p5.createCanvas(1200, 400).parent(canvasParentRef);
     p5.background(255,204,0);
     for (let i = 0; i < numPts; i++) {
