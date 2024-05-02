@@ -32,7 +32,8 @@
     border-top-right-radius: 100%;
     border-bottom-right-radius: 100%;  
     padding: 0.5rem;  
-    margin: 0.25rem 0.25rem;
+    margin: 0.25rem;
+    margin-left: 0rem;
 }
 
 .bar-toggle {
