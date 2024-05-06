@@ -4,10 +4,13 @@ import { GameTitle, eventSelectionCriteria } from './eventsSelectionCriteria';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as AdmZip from 'adm-zip';
+import { plainToClass } from 'class-transformer';
+import { eventDTO } from 'src/dto/eventDTO';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class EventService {
-  private testDataIds = ["0000000", "2616320", "2628069", "test"];
+  private testDataIds = ["0000000", "2616320", "2628069", "test","testerror"];
   constructor(private httpService: HttpService) {}
 
   //get transaction json with default filters and no external filters
@@ -104,7 +107,9 @@ export class EventService {
             }
           });
 
-          return jsonlData;
+          //validate the data
+          const dtoData = plainToClass(eventDTO, jsonlData);
+          await validateOrReject(dtoData).then(() => {return jsonlData});
         } else {
           return "";
         }
