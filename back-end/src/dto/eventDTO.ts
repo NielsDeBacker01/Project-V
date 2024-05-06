@@ -1,8 +1,6 @@
 import { IsNotEmpty, IsString, IsNumber, IsBoolean, ValidateNested } from 'class-validator';
-import { Exclude, Type } from 'class-transformer';
 
-@Exclude()
-export class eventDTO {
+export class EventDTO {
   @IsNotEmpty()
   @IsString()
   occurredAt: string;

@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as AdmZip from 'adm-zip';
 import { plainToClass } from 'class-transformer';
-import { eventDTO } from '../../dto/eventDTO';
+import { EventDTO } from '../../dto/eventDTO';
 import { validateOrReject } from 'class-validator';
 
 @Injectable()
@@ -63,14 +63,17 @@ export class EventService {
       
       //convert jsonl string to a json
       const lines = eventData.split('\n').filter(line => line.trim() !== '');
-      return lines.map(line => {
+      return await Promise.all(lines.map(async line => {
         try {
-          return JSON.parse(line);
+          const parsedLine = JSON.parse(line);
+          const dto = plainToClass(EventDTO, parsedLine);
+          await validateOrReject(dto);
+          return parsedLine;
         } catch (error) {
           console.error(`Error parsing JSON of line "${line}":`, error);
           return { "status": "failed" };
         }
-      })
+      }))
       
     } catch (error) {
       console.error(`Error reading file ../data/events_${series_id}_grid.jsonl: ${error}`);
@@ -107,9 +110,7 @@ export class EventService {
             }
           });
 
-          //validate the data
-          const dtoData = plainToClass(eventDTO, jsonlData);
-          await validateOrReject(dtoData).then(() => {return jsonlData});
+          return jsonlData;
         } else {
           return "";
         }
