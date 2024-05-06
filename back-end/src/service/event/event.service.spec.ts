@@ -35,7 +35,7 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-    /*
+    
     it('getRawJsonBySerieId should throw error when there is no file for the given serieId', async () => {
       // Arrange
       //prevent error logs
@@ -51,13 +51,13 @@ describe('EventService', () => {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
-
+    
     it('getRawJsonBySerieId should give an error when there is a syntax error in the json for the given serieId', async () => {
       // Arrange
-      const expected = [{"events": ["1"]}];
+      const expected = [{occurredAt: "now", sequenceNumber: 1, events: ['1']}];
       //prevent error logs
       jest.spyOn(console, 'error').mockImplementation(() => {});
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events" = ["2"]}');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": ["1"]}\n{"occurredAt":"now", "sequenceNumber":2, "events" = ["2"]}');
       
       // Act
       const result = await service.getDefaultEventsBySerieId(serie_id, gameTitle);
@@ -65,12 +65,12 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-
+    
     it('removeEventsFromJson should throw error when an events field is not an array', async () => {
       // Arrange
       //prevent error logs
       jest.spyOn(console, 'error').mockImplementation(() => {});
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": "2"}');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": ["1"]}\n{"occurredAt":"now", "sequenceNumber":2, "events": "2"}');
       
       // Act & Assert
       try {
@@ -85,7 +85,7 @@ describe('EventService', () => {
       //prevent error logs
       jest.spyOn(console, 'error').mockImplementation(() => {});
       serie_id = "testerror";
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"name": "this value is incorrect and this json object doesnt follow the correct syntax"');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"name": "this value is incorrect and this json object doesnt follow the correct syntax"}');
       
       // Act & Assert
       try {
@@ -93,14 +93,14 @@ describe('EventService', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
-    });*/
+    });
   });
 
   describe('getFilteredEventsBySerieId', () => {
-    /*it('should return a list of events for a serieId that is unfiltered because it passed all filters', async () => {
+    it('should return a list of events for a serieId that is unfiltered because it passed all filters', async () => {
       // Arrange    
-      const expected = [{ events: ['1'] }, { events: ['2'] }];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": ["1"]}\n{"events": ["2"]}');
+      const expected = [{ occurredAt: "now", sequenceNumber: 1, events: ['1'] }, { occurredAt: "now", sequenceNumber: 2, events: ['2'] }];
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": ["1"]}\n{"occurredAt":"now", "sequenceNumber":2, "events": ["2"]}');
       
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
@@ -113,9 +113,9 @@ describe('EventService', () => {
       // Arrange
       filter = new AndFilter(new FilterActorPlayerEvents(), new FilterTargetPlayerEvents());;    
       const expected = [
-        { events: [{ type: 'player-act-player', actor: { type: 'player', id: '1', stateDelta: { id: '1' }, state: { id: '1' } }, action: 'act', target: { type: 'player', id: '2', stateDelta: { id: '2' }, state: { id: '2' } } }] },
+        { occurredAt: "now", sequenceNumber: 1, events: [{ type: 'player-act-player', actor: { type: 'player', id: '1', stateDelta: { id: '1' }, state: { id: '1' } }, action: 'act', target: { type: 'player', id: '2', stateDelta: { id: '2' }, state: { id: '2' } } }] },
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "player-act-player", "actor": { "type": "player", "id": "1", "stateDelta": { "id": "1" }, "state": { "id": "1" } }, "action": "act", "target": { "type": "player", "id": "2", "stateDelta": {"id": "2" }, "state": { "id": "2" } } }] }\n{ "events": ["2"] }');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": [{ "type": "player-act-player", "actor": { "type": "player", "id": "1", "stateDelta": { "id": "1" }, "state": { "id": "1" } }, "action": "act", "target": { "type": "player", "id": "2", "stateDelta": {"id": "2" }, "state": { "id": "2" } } }] }\n{ "occurredAt":"now", "sequenceNumber":2, "events": ["2"] }');
       
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, new eventSelectionCriteria(gameTitle, filter));
@@ -129,9 +129,9 @@ describe('EventService', () => {
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.bannedEventTypes = ["removable"]
       const expected = [
-        { events: [{ type: 'unremovable' }] },
+        { occurredAt: "now", sequenceNumber: 1, events: [{ type: 'unremovable' }] },
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{ "type": "unremovable" }] }\n{ "events": [{ "type": "removable" }] }');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": [{ "type": "unremovable" }] }\n{"occurredAt":"now", "sequenceNumber":2, "events": [{ "type": "removable" }] }');
       
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, filters);
@@ -145,9 +145,9 @@ describe('EventService', () => {
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.transactionFieldsToDelete = ["transactionDelete"];
       const expected = [
-        { events: [{ dontDelete: '1'}]}
+        { occurredAt: "now", sequenceNumber: 1, events: [{ dontDelete: '1'}]}
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"transactionDelete":"delete", "events": [{ "dontDelete": "1"}]}\n{"transactionDelete":"delete", "events": []}');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "transactionDelete":"delete", "events": [{ "dontDelete": "1"}]}\n{"occurredAt":"now", "sequenceNumber":2, "transactionDelete":"delete", "events": []}');
 
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, filters);
@@ -161,9 +161,9 @@ describe('EventService', () => {
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.eventFieldsToDelete = ["eventDelete"];
       const expected = [
-        { events: [{ dontDelete: '1'}]}
+        { occurredAt: "now", sequenceNumber: 1, events: [{ dontDelete: '1'}]}
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"dontDelete": "1", "eventDelete":"delete"}]}\n{"events": [{"eventDelete":"delete"}]}');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": [{"dontDelete": "1", "eventDelete":"delete"}]}\n{"occurredAt":"now", "sequenceNumber":2, "events": [{"eventDelete":"delete"}]}');
       
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, filters);
@@ -171,6 +171,7 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
+    
     
     it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', async () => {
       // Arrange
@@ -181,9 +182,9 @@ describe('EventService', () => {
       };
 
       const expected = [
-        { events: [{ actor: { type: "test", state: { notDelete: "1"}}}]}
+        { occurredAt: "now", sequenceNumber: 1, events: [{ actor: { type: "test", state: { notDelete: "1"}}}]}
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"actor": { "type": "test", "state": { "delete": "1", "notDelete": "1"} }}]}');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": [{"actor": { "type": "test", "state": { "delete": "1", "notDelete": "1"} }}]}');
 
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, filters);
@@ -191,21 +192,21 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-
+    
     it('should return a list of filtered events for a serieId with seriesState/seriesStateDelta fields removed keeping in mind the exceptions, empty objects get removed', async () => {
       // Arrange
       const filters = new eventSelectionCriteria(gameTitle, filter);
       filters.seriesStateAndDeltaExceptions = ["notDelete"];
       const expected = [
-        { events: [{ seriesState: { notDelete: '1' }, seriesStateDelta: { notDelete: '1' }}]}
+        { occurredAt: "now", sequenceNumber: 1, events: [{ seriesState: { notDelete: '1' }, seriesStateDelta: { notDelete: '1' }}]}
       ];
-      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"events": [{"seriesState": { "delete": "1", "notDelete": "1"}, "seriesStateDelta": { "delete": "1", "notDelete": "1"}}]}')
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"occurredAt":"now", "sequenceNumber":1, "events": [{"seriesState": { "delete": "1", "notDelete": "1"}, "seriesStateDelta": { "delete": "1", "notDelete": "1"}}]}')
       
       // Act
       const result = await service.getFilteredEventsBySerieId(serie_id, filters);
 
       //Assert
       expect(result).toEqual(expected);
-    });*/
+    });
   });
 });
