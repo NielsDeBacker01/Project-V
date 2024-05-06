@@ -9,7 +9,7 @@ describe('EventService', () => {
   let service: EventService;
   let serie_id: string;
   let gameTitle: GameTitle;
-  let filter: FilterNone;
+  let filter: Filter;
 
   beforeEach(() => {
     //setup

@@ -1,7 +1,7 @@
 import EventService from './EventService';
 
 describe('Integration test', () => {
-    test('getValorantDefaultEventsBySerieId', async () => {
+    test('getDefaultEventsBySerieId', async () => {
         //arrange
         const responseData = [
             {events:[{action:"pickedUp",actor:{id:"1",state:{},stateDelta:{},type:"player"},target:{id:"1",state:{},stateDelta:{},type:"item"},type:"player-pickedUp-item"}],occurredAt:"Z",sequenceNumber:1},
@@ -9,7 +9,7 @@ describe('Integration test', () => {
         ];
     
         //act
-        const response = await EventService.getValorantDefaultEventsBySerieId('test');
+        const response = await EventService.getGameDefaultEventsBySerieId("valorant",'test');
     
         //assert
         expect(response).toEqual(responseData);

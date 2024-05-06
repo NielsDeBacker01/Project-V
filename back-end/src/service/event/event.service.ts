@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as AdmZip from 'adm-zip';
 import { plainToClass } from 'class-transformer';
-import { eventDTO } from 'src/dto/eventDTO';
+import { eventDTO } from '../../dto/eventDTO';
 import { validateOrReject } from 'class-validator';
 
 @Injectable()
