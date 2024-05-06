@@ -78,6 +78,21 @@ describe('EventService', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(InternalServerErrorException);
       }
+    });    
+    
+    it('removeEventsFromJson should throw error when GRID data is incorrect', async () => {
+      // Arrange
+      //prevent error logs
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      serie_id = "testerror";
+      jest.spyOn(fs, 'readFileSync').mockReturnValue('{"name": "this value is incorrect and this json object doesnt follow the correct syntax"');
+      
+      // Act & Assert
+      try {
+        await service.getDefaultEventsBySerieId(serie_id, gameTitle);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 
