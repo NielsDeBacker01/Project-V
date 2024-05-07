@@ -60,7 +60,7 @@ const Kills = () => {
     
     p5.clear();
     p5.background(255,255,255);
-    if (filteredData) {
+    if (filteredData && filteredData[0].team) {
       let redTeam = filteredData[0].team;
       filteredData.forEach((record,index) => {
         let teamColor = p5.color(255,255,255);

@@ -63,18 +63,19 @@ export class EventService {
       
       //convert jsonl string to a json
       const lines = eventData.split('\n').filter(line => line.trim() !== '');
-      return await Promise.all(lines.map(async line => {
+      const parsedLines = await Promise.all(lines.map(async line => {
         try {
           const parsedLine = JSON.parse(line);
-          const dto = plainToClass(EventDTO, parsedLine);
+          const dto = new EventDTO();
+          Object.assign(dto, parsedLine);
           await validateOrReject(dto);
           return parsedLine;
         } catch (error) {
           console.error(`Error parsing JSON of line "${line}":`, error);
-          return { "status": "failed" };
+          return null;
         }
-      }))
-      
+      }));
+      return parsedLines.filter(parsedLine => parsedLine !== null);
     } catch (error) {
       console.error(`Error reading file ../data/events_${series_id}_grid.jsonl: ${error}`);
       throw new NotFoundException(`Event data for series_id ${series_id} not found.`);
