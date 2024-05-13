@@ -240,38 +240,24 @@ export class EventService {
     try {
       if (entity && entity.type) {
         //gets all filters from the entityFieldsToDelete that correspond to this entities type
-        const relevantFilters = Object.keys(entityFieldsToDelete).reduce((acc, key) => {
-          if (key.startsWith(entity.type)) {
-              acc[key] = entityFieldsToDelete[key];
-          }
-          return acc;
-        }, {});
+        const relevantFilters = Object.keys(entityFieldsToDelete)
+        .filter(key => key.startsWith(entity.type))
+        .reduce((acc, key) => ({ ...acc, [key]: entityFieldsToDelete[key] }), {});
 
         Object.keys(relevantFilters).forEach(key => {
-          let targetField = key.split('_');
           const deleteFields = relevantFilters[key];
-          deleteFields.forEach(field => {
-            let temp = entity.state;
-            if(temp)
-            {
-              for (let i = 1; i <= targetField.length - 1; i++) {
-                temp = temp[targetField[i]];
-                if (!temp) return;
-              }
-              delete temp[field];
-            }
-
-            temp = entity.stateDelta;
-            if(temp)
-            {
-              for (let i = 1; i <= targetField.length - 1; i++) {
-                temp = temp[targetField[i]];
-                if (!temp) return;
-              }
-              delete temp[field];
+          ['state', 'stateDelta'].forEach(property => {
+            let temp = entity[property];
+            if (temp) {
+              deleteFields.forEach(field => {
+                let current = temp;
+                //loops over all subfields specified in the key and updates it after every step to the current value. At the end will be the desired field
+                key.split('_').slice(1).forEach(subfield => current = current[subfield]);
+                if (current) delete current[field];
+              });
             }
           });
-        })
+        });
       }
     } catch (error) {
       console.error(`Error removing fields from entity:`, error);
