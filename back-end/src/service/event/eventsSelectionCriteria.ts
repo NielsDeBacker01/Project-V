@@ -22,22 +22,36 @@ export class eventSelectionCriteria {
                series_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,
                game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
                game_teams: this.actorTargetFieldfilterTemplates.teamsFilters,
-               game_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,               
+               game_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,
+               game_clock: ["id", "type"],           
                round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
                clock: ["id", "type"],
                freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
                timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
                team: [],
+               team_series: ["id"],
+               team_objectives: ["id", "statePath"],
+               team_game: ["id"],
+               team_game_series: ["id"],
+               team_game_series_objectives: ["id", "statePath"],
+               team_round: ["id"],
                player: [],
                player_game: ["id","name","money"],
+               player_game_inventory_items: ["id", "statePath"],
+               player_game_abilities: ["id"],
+               player_game_objectives: ["id", "statePath"],
+               player_series: ["id", "name", "participationStatus"],
+               player_series_objectives: ["id", "statePath"],
+               player_round: ["statePath"],
+               player_round_objectives: ["id", "statePath"],
                item: ["id","statePath"],
                ability: ["id"],
-               plantBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
-               defuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
-               beginDefuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
-               reachDefuseBombCheckpoint: this.actorTargetFieldfilterTemplates.minimalFilters,
-               stopDefuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
-               explodeBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
+               plantBomb: ["id", "statePath", "type"],
+               defuseBomb: ["id", "statePath", "type"],
+               beginDefuseBomb: ["id", "statePath", "type"],
+               reachDefuseBombCheckpoint: ["id", "statePath", "type"],
+               stopDefuseBomb: ["id", "statePath", "type"],
+               explodeBomb: ["id", "statePath", "type"],
             }
             break;
          case GameTitle.CS2:
@@ -109,9 +123,6 @@ export class eventSelectionCriteria {
    
    //sets of fields usually grouped together in filtering
    actorTargetFieldfilterTemplates = {
-      minimalFilters: [
-         "id", "statePath", "type"
-      ],
       teamsFilters: [
          "statePath", "kills", "killAssistsReceived", 
          "killAssistsGiven", "killAssistsReceivedFromPlayer", "weaponKills", 
