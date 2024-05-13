@@ -238,12 +238,40 @@ export class EventService {
   //also removes the id by default as this is also included in the entity already
   private removeFieldsFromEntity(entity, entityFieldsToDelete) {
     try {
-      if (entity && entity.type && entityFieldsToDelete[entity.type]) {
-        const fields = entityFieldsToDelete[entity.type];
-        fields.forEach(field => {
-          delete entity.state?.[field];
-          delete entity.stateDelta?.[field];
-        });
+      if (entity && entity.type) {
+        //gets all filters from the entityFieldsToDelete that correspond to this entities type
+        const relevantFilters = Object.keys(entityFieldsToDelete).reduce((acc, key) => {
+          if (key.startsWith(entity.type)) {
+              acc[key] = entityFieldsToDelete[key];
+          }
+          return acc;
+        }, {});
+
+        Object.keys(relevantFilters).forEach(key => {
+          let targetField = key.split('_');
+          const deleteFields = relevantFilters[key];
+          deleteFields.forEach(field => {
+            let temp = entity.state;
+            if(temp)
+            {
+              for (let i = 1; i <= targetField.length - 1; i++) {
+                temp = temp[targetField[i]];
+                if (!temp) return;
+              }
+              delete temp[field];
+            }
+
+            temp = entity.stateDelta;
+            if(temp)
+            {
+              for (let i = 1; i <= targetField.length - 1; i++) {
+                temp = temp[targetField[i]];
+                if (!temp) return;
+              }
+              delete temp[field];
+            }
+          });
+        })
       }
     } catch (error) {
       console.error(`Error removing fields from entity:`, error);

@@ -29,6 +29,7 @@ export class eventSelectionCriteria {
                timeout: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
                team: [],
                player: [],
+               player_game: ["id","name","money"],
                item: ["id","statePath"],
                ability: ["id"],
                plantBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
@@ -38,6 +39,7 @@ export class eventSelectionCriteria {
                stopDefuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
                explodeBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
             }
+            break;
          case GameTitle.CS2:
             this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
             this.actorTargetFieldsToDelete = {
@@ -56,6 +58,7 @@ export class eventSelectionCriteria {
                map: ["id","statePath","type"],
                tournament: ["id"],               
             }
+            break;
       }
       //default filters that are the same for each game title
       this.transactionFieldsToDelete = [
