@@ -23,7 +23,7 @@ describe('EventService', () => {
     jest.restoreAllMocks();
   });
 
-  describe('getDefaultEventsBySerieId', () => {
+  describe('Default', () => {
     it('should return a list of events for a serieId, simplified with the default filters', async () => {
       // Arrange
       const expected = [{ occurredAt: "now", sequenceNumber: 1, events: ['1'] }, { occurredAt: "now", sequenceNumber: 2, events: ['2'] }];
@@ -80,6 +80,9 @@ describe('EventService', () => {
       }
     });    
     
+  });
+
+  describe('Data validation', () => {    
     it('removeEventsFromJson should throw error when GRID data is incorrect', async () => {
       // Arrange
       //prevent error logs
@@ -96,7 +99,7 @@ describe('EventService', () => {
     });
   });
 
-  describe('getFilteredEventsBySerieId', () => {
+  describe('Data modification', () => {
     it('should return a list of events for a serieId that is unfiltered because it passed all filters', async () => {
       // Arrange    
       const expected = [{ occurredAt: "now", sequenceNumber: 1, events: ['1'] }, { occurredAt: "now", sequenceNumber: 2, events: ['2'] }];
@@ -171,7 +174,6 @@ describe('EventService', () => {
       //Assert
       expect(result).toEqual(expected);
     });
-    
     
     it('should return a list of filtered events for a serieId with specificied actor/target fields removed, empty objects are removed', async () => {
       // Arrange

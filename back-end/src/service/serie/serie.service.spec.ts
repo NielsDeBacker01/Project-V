@@ -1,8 +1,5 @@
-import * as fs from 'fs';
 import { SerieService } from '../serie/serie.service';
 import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { GameTitle } from '../event/eventsSelectionCriteria';
-import { AndFilter, Filter, FilterActorPlayerEvents, FilterNone, FilterTargetPlayerEvents } from '../event/filter';
 
 describe('SerieService', () => {
   let service: SerieService;
