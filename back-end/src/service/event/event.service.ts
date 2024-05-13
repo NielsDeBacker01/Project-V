@@ -252,7 +252,10 @@ export class EventService {
               deleteFields.forEach(field => {
                 let current = temp;
                 //loops over all subfields specified in the key and updates it after every step to the current value. At the end will be the desired field
-                key.split('_').slice(1).forEach(subfield => current = current[subfield]);
+                key.split('_').slice(1).every(subfield => {                  
+                  current = current[subfield];
+                  return typeof current !== 'undefined' && current;
+                });
                 if (current) delete current[field];
               });
             }
