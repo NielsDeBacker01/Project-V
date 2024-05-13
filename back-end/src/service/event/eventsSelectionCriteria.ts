@@ -14,9 +14,15 @@ export class eventSelectionCriteria {
       switch (game) {
          case GameTitle.VALORANT:
             this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
+            //used to filter the fields in the state/statedelta of an actor/target
+            //use an "_" to indicate filtering for a subfield of a actor/target field.
             this.actorTargetFieldsToDelete = {
                series: ["id","games","draftActions"],
+               series_teams: this.actorTargetFieldfilterTemplates.teamsFilters,
+               series_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,
                game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
+               game_teams: this.actorTargetFieldfilterTemplates.teamsFilters,
+               game_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,               
                round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
                clock: ["id", "type"],
                freezetime: ["id", "statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
@@ -25,12 +31,12 @@ export class eventSelectionCriteria {
                player: [],
                item: ["id","statePath"],
                ability: ["id"],
-               plantBomb: ["id","statePath","type"],
-               defuseBomb: ["id","statePath","type"],
-               beginDefuseBomb: ["id","statePath","type"],
-               reachDefuseBombCheckpoint: ["id","statePath","type"],
-               stopDefuseBomb: ["id","statePath","type"],
-               explodeBomb: ["id","statePath","type"],
+               plantBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
+               defuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
+               beginDefuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
+               reachDefuseBombCheckpoint: this.actorTargetFieldfilterTemplates.minimalFilters,
+               stopDefuseBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
+               explodeBomb: this.actorTargetFieldfilterTemplates.minimalFilters,
             }
          case GameTitle.CS2:
             this.bannedEventTypes = this.eventTypefilterTemplates.defaultFilters.concat(this.eventTypefilterTemplates.timeRelatedFilters);
@@ -63,7 +69,7 @@ export class eventSelectionCriteria {
    //Available filter sets for use in bannedEventTypes
    //for now these only take in to account the events from Valorant games
 
-   //deletes events with usually unimportant data
+   //sets of events usually grouped together in filtering
    eventTypefilterTemplates = {
       defaultFilters: [
          "grid-started-feed", "grid-sampled-feed", "grid-sampled-tournament",
@@ -95,6 +101,30 @@ export class eventSelectionCriteria {
       ],
       pregameRelatedFilter: [
          "team-picked-map", "team-banned-map", "series-picked-map"
+      ]
+   };   
+   
+   //sets of fields usually grouped together in filtering
+   actorTargetFieldfilterTemplates = {
+      minimalFilters: [
+         "id", "statePath", "type"
+      ],
+      teamsFilters: [
+         "statePath", "kills", "killAssistsReceived", 
+         "killAssistsGiven", "killAssistsReceivedFromPlayer", "weaponKills", 
+         "teamkills", "teamkillAssistsReceived", "teamkillAssistsGiven", 
+         "teamkillAssistsReceivedFromPlayer", "weaponTeamkills", "selfkills", 
+         "deaths", "objectives", "headshots", 
+         "teamHeadshots"
+      ],
+      teamsPlayersFilters: [
+         "statePath", "segmentType", "kills", 
+         "killAssistsReceived", "killAssistsGiven", "killAssistsReceivedFromPlayer", 
+         "weaponKills", "teamkills", "teamkillAssistsReceived", 
+         "teamkillAssistsGiven", "teamkillAssistsReceivedFromPlayer", "weaponTeamkills", 
+         "selfkills", "deaths", "objectives", 
+         "alive", "currentArmor", "currentHealth", 
+         "headshots" ,"maxHealth", "teamHeadshots"
       ]
    };
 }
