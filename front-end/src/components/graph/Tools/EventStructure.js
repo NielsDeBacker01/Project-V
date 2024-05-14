@@ -10,59 +10,52 @@ const Graph = () => {
   const [eventTypes, setEventTypes] = useState(null);
   const [actorsAndTargets, setActorsAndTargets] = useState(null);
 
-  //this function is used to get the required data
   useEffect(() => {
     (async () => {
       try {
         const data = await EventService.getGameUnfilteredEventsBySerieId(id);
-        transformData(data);
-        setData(data);
         console.log(data);
+        setData(data);
+        transformData(data);
       } catch (error) {
         console.error('Error fetching event data:', error);
       }
     })();
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const transformData = (data) => {
-    setEventTypes(data[0].events[0].target.state.supportedEventTypes);
-    //log for copy pasting
-    console.log(eventTypes);
+    const eventTypes = data[0].events[0].target.state.supportedEventTypes
+    setEventTypes(eventTypes);
+
+    const processFields = (actorTarget) => {
+      const type = actorTarget.type;
+      const fields = Object.keys(actorTarget.state);
+  
+      const index = actorsAndTargets.findIndex(item => Object.keys(item)[0] === type);
+      if (index >= 0) {
+        const combinedSet = new Set([...actorsAndTargets[index][type], ...fields]);
+        actorsAndTargets[index][type] = [...combinedSet];
+      } else {
+        const newObj = {};
+        newObj[type] = fields;
+        actorsAndTargets.push(newObj);
+      }
+    };
 
     let actorsAndTargets = [];
-    setActorsAndTargets(actorsAndTargets);
-    console.log(actorsAndTargets);
     data.forEach((event) => {
-      const events = event.events;
-      for(const transaction of events){
-        const actor = transaction.actor.type;
-        const actorFields = Object.keys(transaction.actor.state);
-        const actorIndex = actorsAndTargets.findIndex(obj => Object.keys(obj)[0] === actor)
-        if (actorIndex >= 0) {
-          const combinedSet = new Set([...actorsAndTargets[actorIndex][actor], ...actorFields]);
-          actorsAndTargets[actorIndex][actor] = [...combinedSet];
-        }
-        else{
-          const newObj = {};
-          newObj[actor] = actorFields;
-          actorsAndTargets.push(newObj);
-        }  
-        
-        const target = transaction.target.type;
-        const targetFields = Object.keys(transaction.target.state);
-        const targetIndex = actorsAndTargets.findIndex(obj => Object.keys(obj)[0] === target)
-        if (targetIndex >= 0) {
-          const combinedSet = new Set([...actorsAndTargets[targetIndex][target], ...targetFields]);
-          actorsAndTargets[targetIndex][target] = [...combinedSet];
-        }
-        else{
-          const newObj = {};
-          newObj[target] = targetFields;
-          actorsAndTargets.push(newObj);
-        }  
-      }
+      event.events.forEach((transaction) => {
+        processFields(transaction.actor);
+        processFields(transaction.target);
+      });
     });
-  }; 
+
+    setActorsAndTargets(actorsAndTargets);
+    //log for copy pasting
+    console.log(actorsAndTargets);
+    console.log(eventTypes);
+  };
 
   //p5js example canvas setup
   const setup = (p5, canvasParentRef) => {
