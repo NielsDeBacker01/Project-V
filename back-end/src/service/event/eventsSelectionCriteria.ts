@@ -15,7 +15,7 @@ export class eventSelectionCriteria {
    seriesStateAndDeltaExceptions: string[]
    
    //provides default values that are usually what is needed
-   constructor(game: GameTitle, filter: Filter = new FilterNone()) {
+   constructor(game: GameTitle = GameTitle.NONE, filter: Filter = new FilterNone()) {
       //default filters that are the same for each game title
       this.criteriaFilterer = filter;
       this.transactionFieldsToDelete = ["id", "correlationId", "seriesId"];
@@ -145,5 +145,6 @@ export class eventSelectionCriteria {
 
 export enum GameTitle {
    VALORANT = 'VALORANT',
-   CS2 = 'CS2'
+   CS2 = 'CS2',
+   NONE = 'NONE'
 }

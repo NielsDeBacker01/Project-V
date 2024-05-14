@@ -13,17 +13,12 @@
   overflow-y: auto;
 }
 
-.react-p5 {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .content {
   height: 100%;
   overflow-x: auto;
   scrollbar-color: white #1f2021;
+  display: grid;
+  place-items: center;
 }
 
 //apply for safari browsers

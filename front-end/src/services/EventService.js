@@ -29,6 +29,10 @@ EventService.getGameDefaultEventsBySerieId = async (gameTitle, serieId) => {
   return fetchData(`/${gameTitle}`, serieId);
 };
 
+EventService.getGameUnfilteredEventsBySerieId = async (serieId) => {
+  return fetchData(``, serieId);
+};
+
 EventService.getGameKillsEventsBySerieId = async (gameTitle, serieId) => {
   return fetchData(`/${gameTitle}/kills`, serieId);
 };

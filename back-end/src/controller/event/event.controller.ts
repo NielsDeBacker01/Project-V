@@ -11,6 +11,16 @@ export class EventController {
   nearCertainPointFilter : Filter = new NearFilter(2000, -5000, 500); 
   AbilityKillSequenceFilter: Filter = new SequenceFilter(new FilterAbilityEvents, new FilterKillEvents, 0, 0.5)
 
+  @Get()
+  getUnfilteredEventsBySerieId(@Query('series_id') series_id: string | string[]): Promise<any> {
+    const filters = new eventSelectionCriteria();
+    filters.bannedEventTypes = [];
+    filters.transactionFieldsToDelete = [];
+    filters.eventFieldsToDelete = [];
+    filters.actorTargetFieldsToDelete = {};
+    return this.eventService.getFilteredEventsBySerieId(series_id, filters);
+  }
+
   @Get(':game')
   getDefaultEventsBySerieId(@Param('game') game: string, @Query('series_id') series_id: string | string[]): Promise<any> {
     return this.eventService.getDefaultEventsBySerieId(series_id, this.stringToGameTitle(game));
