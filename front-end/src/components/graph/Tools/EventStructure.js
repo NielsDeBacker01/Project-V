@@ -29,13 +29,25 @@ const Graph = () => {
     setEventTypes(eventTypes);
 
     const processFields = (actorTarget) => {
+      const processNestedFields = (obj) => {
+        return Object.keys(obj).reduce((acc, key) => {
+          if (Array.isArray(obj[key])) {
+            return acc;
+          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            acc[key] = processNestedFields(obj[key]);
+          } else {
+            acc[key] = {};
+          }
+          return acc;
+        }, {});
+      };
+      
       const type = actorTarget.type;
-      const fields = Object.keys(actorTarget.state);
-
-      const fieldsObject = fields.reduce((acc, field) => {
+      /*const fieldsObject = Object.keys(actorTarget.state).reduce((acc, field) => {
         acc[field] = {};
         return acc;
-      }, {});
+      }, {});*/
+      const fieldsObject = processNestedFields(actorTarget.state);
 
       const index = actorsAndTargets.findIndex(item => Object.keys(item)[0] === type);
       if (index >= 0) {
@@ -47,6 +59,8 @@ const Graph = () => {
         actorsAndTargets.push(newObj);
       }
     };
+
+
 
     let actorsAndTargets = [];
     data.forEach((event) => {
@@ -84,6 +98,7 @@ const Graph = () => {
     }
 
     p5.line(240, 0, 240, 1000)
+    p5.line(390, 40, 390, 950)
 
     if (actorsAndTargets) {
       p5.textSize(20);
@@ -92,10 +107,24 @@ const Graph = () => {
       p5.textSize(12);
       actorsAndTargets.forEach((actorOrTarget, index) => {
         const key = Object.keys(actorOrTarget)[0];
-        const values = Object.keys(actorOrTarget[key]).join(", ");
-        p5.text(`${key}: ${values}`, 250, 50 + (15 * index));
+        const values = formatFields(actorOrTarget[key]).join(", ");
+        p5.text(`${key}:`, 250, 50 + (20 * index));
+        p5.text(`${values}`, 400, 50 + (20 * index));
+        p5.line(250, 55 + (20*index), 1175, 55 + (20*index));
       });
     }
+  };
+
+  const formatFields = (obj, parentKey = '') => {
+    return Object.keys(obj).reduce((acc, key) => {
+      const fullKey = parentKey ? `${parentKey}.${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null && Object.keys(obj[key]).length > 0) {
+        acc.push(...formatFields(obj[key], fullKey));
+      } else {
+        acc.push(fullKey);
+      }
+      return acc;
+    }, []);
   };
 
   //displays a loading animation while data is loading
