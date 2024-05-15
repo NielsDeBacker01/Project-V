@@ -3,7 +3,9 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+//also supports an array of ids as input
 const id = "2671505"
+
 const Graph = () => {
   //default variable to store data in
   const [data, setData] = useState(null);
@@ -24,10 +26,12 @@ const Graph = () => {
     // eslint-disable-next-line
   }, []);
 
+  //gets the event types and actors/targets with their properties into the state
   const transformData = (data) => {
     const eventTypes = data[0].events[0].target.state.supportedEventTypes
     setEventTypes(eventTypes);
 
+    //recursively gets all the subfields
     const processFields = (actorTarget) => {
       const processNestedFields = (obj) => {
         return Object.keys(obj).reduce((acc, key) => {
@@ -54,8 +58,6 @@ const Graph = () => {
         actorsAndTargets.push(newObj);
       }
     };
-
-
 
     let actorsAndTargets = [];
     data.forEach((event) => {
@@ -114,12 +116,15 @@ const Graph = () => {
     }
   };
 
+  //converts the fields into a string array for easier displaying in the draw loop
   const formatFields = (obj, parentKey = '') => {
     return Object.keys(obj).reduce((acc, key) => {
       const fullKey = parentKey ? `${parentKey}.${key}` : key;
       if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-        acc.push(fullKey); // Add the current level
-        acc.push(...formatFields(obj[key], fullKey)); // Add nested levels
+        //add the current level
+        acc.push(fullKey); 
+        //add nested levels
+        acc.push(...formatFields(obj[key], fullKey));
       } else {
         acc.push(fullKey);
       }
