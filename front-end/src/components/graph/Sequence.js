@@ -49,7 +49,7 @@ const NearPoint = () => {
     eventData ? (
       <Sketch setup={setup} draw={draw} />
     ) : (
-      <div className='react-p5'>
+      <div>
         <Spinner/>
       </div>
     )

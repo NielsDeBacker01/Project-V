@@ -1,4 +1,3 @@
-import Sketch from 'react-p5';
 import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
@@ -73,49 +72,6 @@ const Graph = () => {
     console.log(eventTypes);
   };
 
-  //p5js example canvas setup
-  const setup = (p5, canvasParentRef) => {
-    p5.createCanvas(1200, 1000).parent(canvasParentRef);
-    p5.background(255,255,255);
-    p5.fill(0,0,0);
-  };
-
-  //p5js draw loop that automatically gets called every frame
-  const draw = p5 => {
-    p5.clear();
-    p5.background(255,255,255);
-    if (eventTypes) {
-      p5.textSize(20);
-      p5.textAlign(p5.CENTER);
-      p5.text("Types of events: " + eventTypes.length, 120, 25);
-      p5.textSize(12);
-      eventTypes.forEach((eventType, index) => {
-        p5.text(eventType, 120, 50 + (15 * index));
-      });
-    }
-
-    p5.line(240, 0, 240, 1000)
-    p5.line(390, 40, 390, 950)
-
-    if (actorsAndTargets) {
-      p5.textSize(20);
-      p5.textAlign(p5.LEFT);
-      p5.text("Actors/targets and their properties:", 250, 25);
-      p5.textSize(12);
-      let indexBoost = 0;
-      actorsAndTargets.forEach((actorOrTarget, index) => {
-        const key = Object.keys(actorOrTarget)[0];
-        const values = formatFields(actorOrTarget[key]);
-        p5.text(`${key}:`, 250, 50 + (20 * (index + indexBoost)));
-        for (let j = 0; j < values.length; j +=10) {
-          if(j !== 0) indexBoost++;
-          p5.text(`${values.slice(j, j+10).join(", ")}`, 400, 50 + (20 * (index + indexBoost)));
-        }
-        p5.line(250, 55 + (20*(index + indexBoost)), 1175, 55 + (20*(index + indexBoost)));
-      });
-    }
-  };
-
   //converts the fields into a string array for easier displaying in the draw loop
   const formatFields = (obj, parentKey = '') => {
     return Object.keys(obj).reduce((acc, key) => {
@@ -135,9 +91,31 @@ const Graph = () => {
   //displays a loading animation while data is loading
   return (
     data ? (
-      <Sketch setup={setup} draw={draw} />
+      <div class="data react-p5">
+        <div class="events-list">
+          <h2>Types of events:</h2>
+          {eventTypes.map((eventType) => (
+            <p>{eventType}</p>
+          ))}
+        </div>
+        <div class="objects-list">
+          <h2>Actors/targets and their properties:</h2>
+          <div>
+            {actorsAndTargets.map((actorOrTarget) => {
+              const key = Object.keys(actorOrTarget)[0];
+              const values = formatFields(actorOrTarget[key]);
+              return(<div class="object">
+                <p>{key}:</p>
+                <p>{values.join(", ")}</p>
+              </div>
+              )
+            })}
+          </div>
+
+        </div>     
+      </div>
     ) : (
-      <div className='react-p5'>
+      <div>
         <Spinner/>
       </div>
     )

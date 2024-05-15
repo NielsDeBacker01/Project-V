@@ -13,6 +13,67 @@
   overflow-y: auto;
 }
 
+.data{
+  background-color: white;
+  height:100%;
+  width: 100%;
+  color:black;
+  display: flex;
+  max-width:80vw;
+}
+
+.data p{
+  margin:0.1rem;
+  margin-left: 1rem;
+  text-align: left;
+  background-color: white;
+}
+
+.events-list{
+  width:30%;
+}
+
+.objects-list{
+  width:70%;
+  border-left: black 0.2rem solid;
+  margin-right: 1rem;
+}
+
+.object{
+  display: flex;
+}
+
+.object p:nth-child(1)
+{
+  min-width: 25%;
+  margin-right: 0rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  padding: 0.5rem;
+  border-bottom: black solid 2px;
+}
+
+.object p:nth-child(2){
+  width: 100%;
+  padding: 0.5rem;
+  margin-left:0rem;
+  margin-top:0rem;
+  margin-bottom: 0rem;
+  border-left: black solid 2px;
+  border-bottom: black solid 2px;
+}
+
+.object:last-child p{
+  
+  border-bottom: 0px;
+}
+
+.object:nth-child(even)
+{
+  color: #1f2021;
+}
+
+
 .content {
   height: 100%;
   overflow-x: auto;
