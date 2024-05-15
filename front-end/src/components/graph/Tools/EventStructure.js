@@ -43,10 +43,6 @@ const Graph = () => {
       };
       
       const type = actorTarget.type;
-      /*const fieldsObject = Object.keys(actorTarget.state).reduce((acc, field) => {
-        acc[field] = {};
-        return acc;
-      }, {});*/
       const fieldsObject = processNestedFields(actorTarget.state);
 
       const index = actorsAndTargets.findIndex(item => Object.keys(item)[0] === type);
@@ -55,7 +51,6 @@ const Graph = () => {
       } else {
         const newObj = {};
         newObj[type] = fieldsObject;
-        console.log(newObj);
         actorsAndTargets.push(newObj);
       }
     };
@@ -105,12 +100,16 @@ const Graph = () => {
       p5.textAlign(p5.LEFT);
       p5.text("Actors/targets and their properties:", 250, 25);
       p5.textSize(12);
+      let indexBoost = 0;
       actorsAndTargets.forEach((actorOrTarget, index) => {
         const key = Object.keys(actorOrTarget)[0];
-        const values = formatFields(actorOrTarget[key]).join(", ");
-        p5.text(`${key}:`, 250, 50 + (20 * index));
-        p5.text(`${values}`, 400, 50 + (20 * index));
-        p5.line(250, 55 + (20*index), 1175, 55 + (20*index));
+        const values = formatFields(actorOrTarget[key]);
+        p5.text(`${key}:`, 250, 50 + (20 * (index + indexBoost)));
+        for (let j = 0; j < values.length; j +=10) {
+          if(j !== 0) indexBoost++;
+          p5.text(`${values.slice(j, j+10).join(", ")}`, 400, 50 + (20 * (index + indexBoost)));
+        }
+        p5.line(250, 55 + (20*(index + indexBoost)), 1175, 55 + (20*(index + indexBoost)));
       });
     }
   };
@@ -118,8 +117,9 @@ const Graph = () => {
   const formatFields = (obj, parentKey = '') => {
     return Object.keys(obj).reduce((acc, key) => {
       const fullKey = parentKey ? `${parentKey}.${key}` : key;
-      if (typeof obj[key] === 'object' && obj[key] !== null && Object.keys(obj[key]).length > 0) {
-        acc.push(...formatFields(obj[key], fullKey));
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+        acc.push(fullKey); // Add the current level
+        acc.push(...formatFields(obj[key], fullKey)); // Add nested levels
       } else {
         acc.push(fullKey);
       }
