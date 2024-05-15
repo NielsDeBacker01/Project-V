@@ -119,7 +119,7 @@ const Graph = () => {
   //converts the fields into a string array for easier displaying in the draw loop
   const formatFields = (obj, parentKey = '') => {
     return Object.keys(obj).reduce((acc, key) => {
-      const fullKey = parentKey ? `${parentKey}.${key}` : key;
+      const fullKey = parentKey ? `${parentKey}_${key}` : key;
       if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
         //add the current level
         acc.push(fullKey); 
