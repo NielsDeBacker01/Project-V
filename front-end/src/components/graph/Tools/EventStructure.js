@@ -31,14 +31,19 @@ const Graph = () => {
     const processFields = (actorTarget) => {
       const type = actorTarget.type;
       const fields = Object.keys(actorTarget.state);
-  
+
+      const fieldsObject = fields.reduce((acc, field) => {
+        acc[field] = {};
+        return acc;
+      }, {});
+
       const index = actorsAndTargets.findIndex(item => Object.keys(item)[0] === type);
       if (index >= 0) {
-        const combinedSet = new Set([...actorsAndTargets[index][type], ...fields]);
-        actorsAndTargets[index][type] = [...combinedSet];
+        actorsAndTargets[index][type] = {...actorsAndTargets[index][type], ...fieldsObject};
       } else {
         const newObj = {};
-        newObj[type] = fields;
+        newObj[type] = fieldsObject;
+        console.log(newObj);
         actorsAndTargets.push(newObj);
       }
     };
@@ -87,7 +92,7 @@ const Graph = () => {
       p5.textSize(12);
       actorsAndTargets.forEach((actorOrTarget, index) => {
         const key = Object.keys(actorOrTarget)[0];
-        const values = actorOrTarget[key].join(", ");
+        const values = Object.keys(actorOrTarget[key]).join(", ");
         p5.text(`${key}: ${values}`, 250, 50 + (15 * index));
       });
     }
