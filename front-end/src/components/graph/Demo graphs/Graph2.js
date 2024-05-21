@@ -1,6 +1,7 @@
 import React from 'react';
 import Sketch from 'react-p5';
 
+//this graph is a fake visualisation for the sake of demonstration/testing
 const Graph2 = () => {
   let randomY = [];
   let numPts = 10;

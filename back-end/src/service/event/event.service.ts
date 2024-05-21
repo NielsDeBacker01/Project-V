@@ -4,7 +4,6 @@ import { GameTitle, eventSelectionCriteria } from './eventsSelectionCriteria';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as AdmZip from 'adm-zip';
-import { plainToClass } from 'class-transformer';
 import { EventDTO } from '../../dto/eventDTO';
 import { validateOrReject } from 'class-validator';
 

@@ -3,6 +3,7 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+//a graph that displays all events that happened near a certain point on the map for an id
 const NearPoint = () => {
   const [eventData, setEventData] = useState(null);
 

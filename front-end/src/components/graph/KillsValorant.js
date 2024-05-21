@@ -3,6 +3,8 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+//a graph that displays all kills for each player per team in a valorant game for the given series id
+//essentially the same as the killsCSGO graph but for a valorant game
 const Kills = () => {
   const [filteredData, setFilteredData] = useState(null);
 
@@ -19,6 +21,7 @@ const Kills = () => {
     })();    
   }, []);
 
+  //additional transforming of the event data to make it easier to visualize
   const filterEventData = (eventData) => {
     let killsByActor = {};
   

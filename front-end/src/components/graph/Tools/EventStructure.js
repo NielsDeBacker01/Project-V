@@ -2,9 +2,11 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+
+
+//this graph shows the events structure for a given series id
 //also supports an array of ids as input
 const id = "2671505"
-
 const Graph = () => {
   //default variable to store data in
   const [data, setData] = useState(null);
@@ -88,9 +90,10 @@ const Graph = () => {
     }, []);
   };
 
-  //displays a loading animation while data is loading
   return (
+    //displays a loading animation while data is loading
     data ? (
+      //this data visualisation doesn't work with p5js as this doesn't allow for copy pasting from the graph
       <div class="data react-p5">
         <div class="events-list">
           <h2>Types of events:</h2>

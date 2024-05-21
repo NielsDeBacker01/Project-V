@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
+//class to check if event data from GRID's API is valid
 export class EventDTO {
   @IsNotEmpty()
   @IsString()

@@ -4,6 +4,7 @@ import SerieIdService from '@services/SerieIdService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+//a graph that display all kills for the members for a team over all their matches
 const teamName = "Seight";
 const NearPoint = () => {
   const [eventData, setEventData] = useState(null);

@@ -3,7 +3,8 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
-const NearPoint = () => {
+//a graph that displays all game ability events that proceed a kill event in close succession
+const Sequence = () => {
   const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
@@ -56,5 +57,5 @@ const NearPoint = () => {
    );
 };
 
-NearPoint.displayName = 'Abilities causing kills';
-export default NearPoint;
+Sequence.displayName = 'Abilities causing kills';
+export default Sequence;

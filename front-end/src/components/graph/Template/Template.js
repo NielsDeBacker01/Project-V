@@ -3,6 +3,9 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
+//this is an example template for a graph
+//as a result this isn't a real graph and requires changes to work
+//the Template folder will prevent this file from being loaded in the sidebar make sure to not put your actual graphs here
 const Graph = () => {
   //default variable to store data in
   const [data, setData] = useState(null);
@@ -28,7 +31,7 @@ const Graph = () => {
     return data;
   }; 
 
-  //p5js example canvas setup
+  //p5js example canvas setup that gets called only the first time the canvas gets rendered
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(800, 800).parent(canvasParentRef);
     p5.background(255,255,255);
@@ -38,7 +41,7 @@ const Graph = () => {
   const draw = p5 => {
     p5.clear();
     p5.background(255,255,255);
-    //example to display data
+    //example to display data (only when available)
     if (data) {
       //loops over each record in the data with the corresponding index given as a number (usefull for calculations)
       data.forEach((record,index) => {
@@ -48,7 +51,7 @@ const Graph = () => {
     }
   };
 
-  //displays a loading animation while data is loading
+  //displays a loading animation while data is unavailable
   return (
     data ? (
       <Sketch setup={setup} draw={draw} />
