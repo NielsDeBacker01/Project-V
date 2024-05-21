@@ -54,7 +54,7 @@ export class EventService {
       //get the correct type of jsonl string
       if(this.testDataIds.includes(series_id))
       {
-        eventData = fs.readFileSync(`../data/events_${series_id}_grid.jsonl`, 'utf8');
+        eventData = fs.readFileSync(`../testdata/events_${series_id}_grid.jsonl`, 'utf8');
       }
       else
       {

@@ -10,22 +10,19 @@ class App extends Component {
       eventData: null,
       availableGraphs: [],
       renderGraph: true,
-      //default value if no graph is selected
+      //default text for when no graph is selected
       selectedGraph: () => {return <div className="react-p5">Select a graph to display</div>},
     };
   }
 
+  //collects all components (js files) in the graph folder for use in the sidebar on launch of the app
   componentDidMount() {
-    //collects all components in the graph folder for use in the sidebar
     const context = require.context('../graph', true, /\.js$/);
-
     const graphFiles = context.keys().map((file) => {
       return {
-        fileName: file.replace(/^.*[\\/]/, ''),
         component: context(file).default
       };
     });
-
     const graphComponents = graphFiles.map((file) => file.component);
     this.setState({ availableGraphs: graphComponents });
   }
