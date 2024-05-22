@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartColumn } from '@fortawesome/free-solid-svg-icons';
 
+//generates a button for the sidebar based on the given info, usually done from sidebar component
 const SidebarButton = ({ handleGraphSelect, graph, label, index }) => {
   let id = label.replace(/ /g, "-");
   id += "-" + index;

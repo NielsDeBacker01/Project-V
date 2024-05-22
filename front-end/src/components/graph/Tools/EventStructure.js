@@ -2,8 +2,6 @@ import EventService from '@services/EventService';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@components/spinner/Spinner';
 
-
-
 //this graph shows the events structure for a given series id
 //also supports an array of ids as input
 const id = "2671505"

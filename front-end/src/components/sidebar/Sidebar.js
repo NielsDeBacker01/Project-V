@@ -12,6 +12,7 @@ const Sidebar = ({ handleGraphSelect }) => {
   const [sidebarVisibility, setSidebarVisibility] = useState(true);
   const [selectedGraph, setSelectedGraph] = useState();
 
+  //initialization logic for sidebar
   useEffect(() => {
     //gets all components in the graph folder for use in the sidebar
     const context = require.context('../graph', true, /\.js$/);
@@ -32,6 +33,7 @@ const Sidebar = ({ handleGraphSelect }) => {
     setFolderVisibility(folderVisibilities);
   }, []);
 
+  //gets called every time the selectedGraph changes
   useEffect(() => {
     // Apply style to a selected graph
     if(selectedGraph){
@@ -68,6 +70,7 @@ const Sidebar = ({ handleGraphSelect }) => {
 
   return(
     sidebarVisibility ? (
+      //open sidebar html
       <div className="sidebar" data-testid="sidebar">
         <div className="head">
           <div className="bar-toggle close" onClick={() => toggleSidebarVisibility()}>
@@ -94,14 +97,17 @@ const Sidebar = ({ handleGraphSelect }) => {
 
       </div>
     ) : (
+      //closed sidebar html
       <div className="bar-toggle open" onClick={() => toggleSidebarVisibility()}>
         <FontAwesomeIcon icon={faAnglesRight} className='icon'/>
       </div>
     )
   );
 
+  //renders graph buttons for a certain folder
   function renderGraphsinFolder(folder, index) {
     return (
+      //this div holds the css logic to be hidden when a folder is collapsed
       <div className={`folderContent ${folderVisibility[index] ? '' : 'hidden'}`} key={index}>
         {availableGraphs.map((graph, index) => (
           graph.folderName === folder && (
