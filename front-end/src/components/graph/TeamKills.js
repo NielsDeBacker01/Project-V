@@ -14,7 +14,7 @@ const NearPoint = () => {
       try {
         const teamId = (await SerieIdService.getTeamIdForTeam(teamName)).find(team => team.name === teamName).id;
         console.log(teamId);
-        const teamMatchIds = await SerieIdService.getRecentMatchIdsForTeam(teamName);
+        const teamMatchIds = await SerieIdService.getSerieIdsByTeamName(teamName);
         console.log(teamMatchIds);
         const data = await EventService.getGameKillsEventsBySerieId("cs2",teamMatchIds);
         console.log(data);

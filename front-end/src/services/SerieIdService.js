@@ -9,6 +9,7 @@ const SerieIdService = axios.create({
   },
 });
 
+//generic fetch function
 const fetchData = async (path, teamName) => {
   try {
     console.time('BackendCall Series');
@@ -25,7 +26,8 @@ const fetchData = async (path, teamName) => {
   }
 };
 
-SerieIdService.getRecentMatchIdsForTeam = async (teamName) => {
+//gets all series ids for a teamname
+SerieIdService.getSerieIdsByTeamName = async (teamName) => {
   return fetchData('/series-ids', teamName);
 };
 

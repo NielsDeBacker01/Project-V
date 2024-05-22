@@ -9,6 +9,7 @@ const EventService = axios.create({
   },
 });
 
+//generic fetch function
 const fetchData = async (path, serieId) => {
   try {
     console.time('BackendCall Events');
@@ -25,6 +26,7 @@ const fetchData = async (path, serieId) => {
   }
 };
 
+//list of all service functions
 EventService.getGameDefaultEventsBySerieId = async (gameTitle, serieId) => {
   return fetchData(`/${gameTitle}`, serieId);
 };
