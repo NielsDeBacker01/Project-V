@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Logger, Param, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
 import { AndFilter, Filter, FilterAbilityEvents, FilterActorPlayerEvents, FilterItemEvents, FilterKillEvents, FilterTargetPlayerEvents, NearFilter, OrFilter, SequenceFilter } from 'src/service/event/filter';
 import { EventService } from 'src/service/event/event.service';
 import { GameTitle, eventSelectionCriteria } from 'src/service/event/eventsSelectionCriteria';

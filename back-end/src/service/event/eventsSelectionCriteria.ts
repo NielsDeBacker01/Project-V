@@ -1,5 +1,6 @@
 import { Filter, FilterNone } from "./filter";
 
+//a class to specify how events should be filtered/simplified during the event service proces
 export class eventSelectionCriteria {
    //used to filter out certain types of events
    bannedEventTypes: string[];
@@ -143,6 +144,7 @@ export class eventSelectionCriteria {
    };
 }
 
+//enum to help specify gameTitles
 export enum GameTitle {
    VALORANT = 'VALORANT',
    CS2 = 'CS2',

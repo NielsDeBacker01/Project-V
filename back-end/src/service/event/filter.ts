@@ -1,9 +1,10 @@
 export interface Filter {
     //since the given json is made of transactions instead of events,
-    //a .map is best applied to the json instead of .filter
+    //a .map() is best applied to the transactions json instead of .filter()
     filterEvents(transactions: any[]): any[];
 }
 
+//used to combine 2 filters, BOTH have to be met for an event to pass
 export class AndFilter implements Filter {
     private filter: Filter;
     private otherFilter: Filter;
@@ -19,6 +20,7 @@ export class AndFilter implements Filter {
     }
 }
 
+//used to combine 2 filters, AT LEAST 1 has to be met for an event to pass
 export class OrFilter implements Filter {
     private filter: Filter;
     private otherFilter: Filter;
@@ -41,6 +43,7 @@ export class OrFilter implements Filter {
     }
 }
 
+//used to check if the position of the actor (player) is within the range of an x-y location
 export class NearFilter implements Filter {
     private xLocation: number;
     private yLocation: number;
@@ -74,6 +77,8 @@ export class NearFilter implements Filter {
     }
 }
 
+//checks for event pairs where they each match their corresponding filter and succeed each other within the before/after limit.
+//both events found in each pair will be added to the results (no duplicates will be added)
 export class SequenceFilter implements Filter {
     private filter: Filter;
     private otherFilter: Filter;
@@ -127,6 +132,7 @@ export class SequenceFilter implements Filter {
     }
 }
 
+//Filter that always passes
 export class FilterNone implements Filter {
     filterEvents(transactions: any[]): any[] {
         return transactions;
