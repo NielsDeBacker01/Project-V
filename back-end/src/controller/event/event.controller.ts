@@ -6,10 +6,11 @@ import { GameTitle, eventSelectionCriteria } from 'src/service/event/eventsSelec
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
-  playerAgainstPlayerFilter: Filter = new AndFilter(new FilterActorPlayerEvents, new FilterTargetPlayerEvents);
-  itemOrAbilityFilter : Filter = new OrFilter(new FilterItemEvents, new FilterAbilityEvents);
+  //Examples for non-standard filters that require additional parameters
   nearCertainPointFilter : Filter = new NearFilter(2000, -5000, 500); 
   AbilityKillSequenceFilter: Filter = new SequenceFilter(new FilterAbilityEvents, new FilterKillEvents, 0, 0.5)
+  playerAgainstPlayerFilter: Filter = new AndFilter(new FilterActorPlayerEvents, new FilterTargetPlayerEvents);
+  itemOrAbilityFilter : Filter = new OrFilter(new FilterItemEvents, new FilterAbilityEvents);
 
   @Get()
   getUnfilteredEventsBySerieId(@Query('series_id') series_id: string | string[]): Promise<any> {

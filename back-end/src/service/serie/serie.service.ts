@@ -13,7 +13,7 @@ export class SerieService {
         },
     });
 
-    // Send the request
+    // Function to handle sending the request
     async callGraphQLQuery( query, variables = {}) {
         try {
             const data = await this.graphQlClient.request(query, variables);
@@ -23,6 +23,7 @@ export class SerieService {
         }
     }
 
+    // Recursive function to handle multiple request to work with paging
     async callGraphQLQueryRecursively( query, variables, allNodes = [] ) {
         // Call the callGraphQLQuery() function to make the initial request
         const data = await this.callGraphQLQuery(query, variables);
@@ -44,6 +45,7 @@ export class SerieService {
         }
     }
 
+    //get all teamIds matching a team name
     async getTeamIdByTeamName(team_name: string): Promise<any> {
         try {
             if(team_name === undefined)
@@ -76,6 +78,8 @@ export class SerieService {
         }
     }
 
+
+    //below are all graphql queries
     teamIdsForTeamNameQuery = `
     query teamIdsForTeamNameQuery($teamName: String!) {
         teams(filter: { name: { contains: $teamName } }) {
