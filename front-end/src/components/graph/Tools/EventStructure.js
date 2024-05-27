@@ -92,20 +92,20 @@ const Graph = () => {
     //displays a loading animation while data is loading
     data ? (
       //this data visualisation doesn't work with p5js as this doesn't allow for copy pasting from the graph
-      <div class="data react-p5">
-        <div class="events-list">
+      <div className="data react-p5">
+        <div className="events-list">
           <h2>Types of events:</h2>
-          {eventTypes.map((eventType) => (
-            <p>{eventType}</p>
+          {eventTypes.map((eventType, index) => (
+            <p key={index}>{eventType}</p>
           ))}
         </div>
-        <div class="objects-list">
+        <div className="objects-list">
           <h2>Actors/targets and their properties:</h2>
           <div>
             {actorsAndTargets.map((actorOrTarget) => {
               const key = Object.keys(actorOrTarget)[0];
               const values = formatFields(actorOrTarget[key]);
-              return(<div class="object">
+              return(<div className="object">
                 <p>{key}:</p>
                 <p>{values.join(", ")}</p>
               </div>

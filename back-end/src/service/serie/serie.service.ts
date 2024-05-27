@@ -83,15 +83,11 @@ export class SerieService {
     teamIdsForTeamNameQuery = `
     query teamIdsForTeamNameQuery($teamName: String!) {
         teams(filter: { name: { contains: $teamName } }) {
-        totalCount
         pageInfo {
-            hasPreviousPage
             hasNextPage
-            startCursor
             endCursor
         }
         edges {
-            cursor
             node {
             id
             name
@@ -112,15 +108,11 @@ export class SerieService {
         }
         orderBy: StartTimeScheduled
         ) {
-        totalCount,
         pageInfo{
-            hasPreviousPage
             hasNextPage
-            startCursor
             endCursor
         }
         edges{
-            cursor
             node{
             id
             startTimeScheduled
