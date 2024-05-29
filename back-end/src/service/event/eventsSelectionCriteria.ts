@@ -28,11 +28,11 @@ export class eventSelectionCriteria {
       //use an "_" to indicate filtering for a subfield of a actor/target field.
       this.actorTargetFieldsToDelete = {
          series: ["id","games","draftActions"],
-         series_teams: this.actorTargetFieldfilterTemplates.teamsFilters,
-         series_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,
+         series_teams: this.actorTargetFieldFilterTemplates.teamsFilters,
+         series_teams_players: this.actorTargetFieldFilterTemplates.teamsPlayersFilters,
          game: ["statePath","structures","nonPlayerCharacters","segments","draftActions"],
-         game_teams: this.actorTargetFieldfilterTemplates.teamsFilters,
-         game_teams_players: this.actorTargetFieldfilterTemplates.teamsPlayersFilters,
+         game_teams: this.actorTargetFieldFilterTemplates.teamsFilters,
+         game_teams_players: this.actorTargetFieldFilterTemplates.teamsPlayersFilters,
          game_clock: ["id", "type"],
          round: ["statePath", "type", "sequenceNumber", "teams", "segments", "draftActions"],
          clock: ["id", "type"],
@@ -123,7 +123,7 @@ export class eventSelectionCriteria {
    };   
    
    //sets of fields usually grouped together in filtering
-   actorTargetFieldfilterTemplates = {
+   actorTargetFieldFilterTemplates = {
       teamsFilters: [
          "statePath", "kills", "killAssistsReceived", 
          "killAssistsGiven", "killAssistsReceivedFromPlayer", "weaponKills", 
